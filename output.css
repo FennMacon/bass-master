@@ -1,0 +1,189 @@
+html,
+body,
+ul,
+ol {
+  margin: 0;
+  padding: 0; }
+
+body {
+  color: #190f0f;
+  background: #e5fcc2;
+  font-family: 'Patua One', cursive; }
+
+header {
+  font-family: 'Covered By Your Grace', cursive;
+  background: #547980;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1; }
+
+h1 {
+  text-shadow: 1px 1px 1px #000;
+  text-align: center;
+  color: #F38630; }
+
+li {
+  list-style-type: square;
+  list-style-position: inside;
+  font-family: 'Raleway', sans-serif; }
+
+p {
+  font-family: 'Raleway', sans-serif; }
+
+a {
+  text-decoration: none;
+  color: #190f0f; }
+
+a:hover {
+  text-shadow: 1px 1px 1px #fff; }
+
+.container {
+  position: absolute;
+  top: 100px;
+  width: 100%;
+  padding-bottom: 20px;
+  z-index: 0; }
+
+article {
+  float: left;
+  width: 62.5%;
+  border: 1px groove #EC407A;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  border-radius: 4px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  background: #9DE0AD;
+  padding: 10px; }
+  @media (max-width: 1200px) {
+    article {
+      width: 90%; } }
+
+aside {
+  float: right;
+  width: 28.125%;
+  border: 1px groove #EC407A;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  border-radius: 4px;
+  margin-left: 10px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  background: #9DE0AD;
+  padding-left: 10px;
+  padding-bottom: 10px; }
+  @media (max-width: 1200px) {
+    aside {
+      display: none; } }
+
+footer {
+  background: #E0E4CC;
+  width: 100%;
+  height: 22px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: inline-block;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  z-index: 1; }
+
+button {
+  height: 18px;
+  font-family: 'Raleway', sans-serif;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  border-radius: 4px;
+  border-left: 1px outset #000;
+  border-right: 1px outset #000;
+  border-top: 1px outset #000;
+  border-bottom: 1px outset #000;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 2px;
+  background: #e5fcc2;
+  float: left; }
+
+button:hover {
+  background: #9DE0AD; }
+
+button:active {
+  background: #55bdb8; }
+
+button:focus {
+  outline: none; }
+
+.btn-active {
+  background: #55bdb8; }
+
+#piano {
+  background-image: url("piano.png");
+  background-size: cover;
+  width: 100%;
+  height: 300px;
+  position: fixed;
+  overflow: hidden;
+  border: 1px solid #000; }
+
+#tc {
+  background-image: url("tc.jpg");
+  background-size: cover;
+  width: 100%;
+  height: 280px;
+  position: fixed;
+  overflow: hidden;
+  border: 1px solid #000; }
+
+#bc {
+  background-image: url("bc.png");
+  background-color: #FFF;
+  background-size: cover;
+  width: 100%;
+  height: 280px;
+  position: fixed;
+  overflow: hidden;
+  border: 1px solid #000; }
+
+#bt {
+  background-image: url("bt.jpg");
+  background-size: cover;
+  width: 100%;
+  height: 320px;
+  position: fixed;
+  overflow: hidden;
+  border: 1px solid #000; }
+
+#full {
+  background-image: url("full.gif");
+  background-size: cover;
+  width: 100%;
+  height: 350px;
+  position: fixed;
+  overflow: hidden;
+  border: 1px solid #000; }
+
+#nd {
+  background-image: url("nd.png");
+  background-size: cover;
+  width: 100%;
+  height: 400px;
+  position: fixed;
+  overflow: hidden;
+  border: 1px solid #000; }
+
+.is-hidden {
+  bottom: -5000px; }
+
+.is-active {
+  bottom: 24px; }
+
+.right {
+  float: right; }
+
+/*# sourceMappingURL=output.css.map */
