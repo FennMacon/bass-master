@@ -137,59 +137,76 @@ button:focus{
 }
 
 #piano{
-	background-image: url("piano.png");
-	background-size: cover;
+	background: url("svg/piano.svg");
+	background-size: 100% 300px;
 	width:100%;
 	height:300px;
 	position:fixed;
 	overflow:hidden;
-	border: 1px solid #000;
+}
+#pianonotes{
+	background: url("svg/pianonotes.svg");
+	background-size: 100% 300px;
+	width:100%;
+	height:300px;
+	position:fixed;
+	overflow:hidden;
 }
 #tc{
-	background-image: url("tc.jpg");
-	background-size: cover;
+	background-image: url("svg/tc.svg");
+	background-size: 100% 300px;
 	width:100%;
-	height:280px;
+	height:300px;
 	position:fixed;
 	overflow:hidden;
-	border: 1px solid #000;
 }
 #bc{
-	background-image: url("bc.png");
-	background-color: #FFF;
-	background-size: cover;
+	background-image: url("svg/bc.svg");
+	background-size: 100% 300px;
 	width:100%;
-	height:280px;
+	height:300px;
 	position:fixed;
 	overflow:hidden;
-	border: 1px solid #000;
+}
+#b{
+	background: url("svg/bass.svg");
+	background-size: 100% 300px;
+	width:100%;
+	height:300px;
+	position:fixed;
+	overflow:hidden;
+}
+#bn{
+	background: url("svg/bassnotes.svg");
+	background-size: 100% 300px;
+	width:100%;
+	height:300px;
+	position:fixed;
+	overflow:hidden;
 }
 #bt{
-	background-image: url("bt.jpg");
-	background-size: cover;
+	background: url("svg/bassnumbers.svg");
+	background-size: 100% 300px;
 	width:100%;
-	height:320px;
+	height:300px;
 	position:fixed;
 	overflow:hidden;
-	border: 1px solid #000;
 }
 #full{
-	background-image: url("full.gif");
-	background-size: cover;
+	background-image: url("svg/tcnotes.svg");
+	background-size: 100% 300px;
 	width:100%;
-	height:350px;
+	height:300px;
 	position:fixed;
 	overflow:hidden;
-	border: 1px solid #000;
 }
 #nd{
-	background-image: url("nd.png");
-	background-size: cover;
+	background-image: url("svg/bcnotes.svg");
+	background-size: 100% 300px;
 	width:100%;
-	height:400px;
+	height:300px;
 	position:fixed;
 	overflow:hidden;
-	border: 1px solid #000;
 }
 .is-hidden{
 	bottom:-5000px;
