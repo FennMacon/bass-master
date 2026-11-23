@@ -1,217 +1,55 @@
-@import 'reset';
-
-$font-stack: Helvetica, sans-serif;
-$primary-color: #e5fcc2;
-$secondary-color: #9DE0AD;
-$header-color: #547980;
-$footer-color: #E0E4CC;
-$active-color: #55bdb8;
-$text-color: #190f0f;
-
-@mixin border-radius($radius) {
-  -webkit-border-radius: $radius;
-     -moz-border-radius: $radius;
-      -ms-border-radius: $radius;
-          border-radius: $radius;
+/* Shared source: run node build-styles.cjs after editing this file. */
+:root { --footer-height: 0px; }
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-block: 1rem calc(var(--footer-height) + 1rem); }
+body { margin: 0; color: #190f0f; background: #e5fcc2; font-family: 'Raleway', sans-serif; line-height: 1.6; overflow-wrap: break-word; }
+header { background: #547980; padding: 1rem; }
+h1 { margin: 0; text-align: center; color: #ffcb9e; font-family: 'Covered By Your Grace', cursive; font-size: clamp(2rem, 5vw, 3rem); }
+h2, h3, h4 { font-family: 'Patua One', serif; line-height: 1.3; }
+h1, h2, h3 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+a { color: inherit; text-underline-offset: .2em; }
+header a { text-decoration: none; }
+a:hover { text-decoration-thickness: 2px; }
+button { font: inherit; color: inherit; background: #e5fcc2; border: 1px solid #547980; border-radius: 4px; padding: .5rem .75rem; min-height: 2.75rem; cursor: pointer; }
+button:hover { background: #9DE0AD; }
+button:active, button[aria-expanded="true"] { background: #55bdb8; }
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 3px solid #190f0f; outline-offset: 3px; }
+header a:focus-visible { outline-color: white; }
+.skip-link { position: fixed; top: .5rem; left: .5rem; z-index: 3000; padding: .75rem; background: white; transform: translateY(-200%); }
+.skip-link:focus { transform: none; }
+.lesson-page .container { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 20rem); gap: 1.25rem; max-width: 85rem; margin: auto; padding: 1.25rem 1rem calc(var(--footer-height) + 2rem); align-items: start; }
+.lesson-page main { grid-column: 1; grid-row: 1; min-width: 0; }
+.lesson-nav { grid-column: 2; grid-row: 1; background: #9DE0AD; border: 1px solid #547980; border-radius: 4px; padding: 1rem; }
+.lesson-nav h2 { font-size: 1.1rem; }
+.lesson-nav a { display: inline-block; padding-block: .35rem; }
+ul, ol { padding-inline-start: 1.5rem; }
+.lesson-page article { background: #9DE0AD; border: 1px solid #547980; border-radius: 4px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+.lesson-page article > :first-child { margin-top: 0; }
+.lesson-page article p, .lesson-page article li { max-width: 70ch; }
+footer { background: #E0E4CC; }
+.reference-toolbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; padding: .5rem max(.75rem, env(safe-area-inset-right)) max(.5rem, env(safe-area-inset-bottom)) max(.75rem, env(safe-area-inset-left)); border-top: 1px solid #547980; }
+.author-link { padding: .5rem; margin-left: auto; }
+.reference-panel { position: absolute; bottom: 100%; left: 0; right: 0; margin: 0; padding: 1rem; background: white; border: 2px solid #547980; max-height: min(65vh, 28rem); overflow: auto; }
+.reference-panel img { display: block; width: 100%; height: auto; max-height: 17rem; object-fit: contain; }
+.reference-panel figcaption { max-width: 75ch; margin: .75rem auto 0; }
+[hidden] { display: none !important; }
+#hideAllButton { background: #ffb4ad; }
+@media (max-width: 60rem) {
+  .lesson-page .container { display: flex; flex-direction: column; }
+  .lesson-nav { width: 100%; display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; }
+  .lesson-nav ul { display: none; }
+  .lesson-nav h2, .lesson-nav p { margin: 0; }
+  .lesson-nav a { min-height: 2.75rem; }
+  .lesson-page main { width: 100%; }
+  .reference-toolbar { position: relative; }
+  .lesson-page .container { padding-bottom: 1rem; }
+  .reference-panel { max-height: 60vh; }
+  .author-link { margin-left: 0; }
 }
-$breakpoint-tablet: 1200px;
-
-body{
-	color: $text-color;
-	background: $primary-color;
-	font-family: 'Patua One', cursive;
+@media (pointer: coarse) {
+  button, footer a, .lesson-nav a { min-height: 44px; min-width: 44px; }
 }
-
-header{
-	font-family: 'Covered By Your Grace', cursive;
-	background: $header-color;
-	width:100%;
-	position:fixed;
-	top:0;
-	left:0;
-	z-index: 1000;
-}
-
-h1{
-	text-shadow: 1px 1px 1px #000;
-	text-align: center;
-	color: #F38630;
-}
-li{
-	list-style-type: square;
-    list-style-position: inside;
-    font-family: 'Raleway', sans-serif;
-}
-p{
-	font-family: 'Raleway', sans-serif;
-}
-a{
-	text-decoration:none;
-	color:$text-color;
-}
-a:hover{
-	text-shadow: 1px 1px 1px #fff;
-}
-
-.container { 
-	position: absolute;
-	top:100px;
-	width: 100%; 
-	padding-bottom: 20px;
-	z-index: 0;
-}
-
-article {
-  float: left;
-  width: 600px / 960px * 100%;
-  border: 1px groove #EC407A;
-  @include border-radius(4px);  
-  margin-left:10px;
-  margin-right:10px;
-  margin-bottom: 20px;
-  background: $secondary-color;
-  padding: 10px;
-    @media (max-width: $breakpoint-tablet) {
-  		width: 90%;
-	}
-}
-
-aside {	
-  float: right;
-  width: 300px / 960px * 90%;
-  border: 1px groove #EC407A;
-  @include border-radius(4px);
-  margin-left:10px;
-  margin-right:20px;
-  margin-bottom: 20px;
-  background: $secondary-color;
-  padding-left:10px;
-  padding-bottom:10px;
-  	@media (max-width: $breakpoint-tablet) {
-  		display:none;
-	}
-}
-
-footer{
-	background: $footer-color;
-	width:100%;
-	height:5%;
-	position:fixed;
-	bottom:0;
-	left:0;
-	display: inline-block;
-	border-top: 1px solid #000;
-	border-bottom: 1px solid #000;
-	z-index: 1000;
-}
-
-button{
-	height: 90%;
-	font-family: 'Raleway', sans-serif;
-    @include border-radius(4px);  
-	border: 5% outset #000;
-	margin-left: 10px;
-	margin-right: 10px;
-	margin-top: 2px;
-	background: $primary-color;
-	float: left;
-}
-
-button:hover{
-	background: $secondary-color;
-}
-
-button:active{
-	background: $active-color;
-}
-
-button:focus{
-	outline:none;
-}
-
-.btn-active{
-	background: $active-color;
-}
-
-#piano{
-	background: url("svg/piano.svg");
-	background-size: 100% 300px;
-	width:100%;
-	height:300px;
-	position:fixed;
-	overflow:hidden;
-}
-#pianonotes{
-	background: url("svg/pianonotes.svg");
-	background-size: 100% 300px;
-	width:100%;
-	height:300px;
-	position:fixed;
-	overflow:hidden;
-}
-#tc{
-	background-image: url("svg/tc.svg");
-	background-size: 100% 300px;
-	width:100%;
-	height:300px;
-	position:fixed;
-	overflow:hidden;
-}
-#bc{
-	background-image: url("svg/bc.svg");
-	background-size: 100% 300px;
-	width:100%;
-	height:300px;
-	position:fixed;
-	overflow:hidden;
-}
-#b{
-	background: url("svg/bass.svg");
-	background-size: 100% 300px;
-	width:100%;
-	height:300px;
-	position:fixed;
-	overflow:hidden;
-}
-#bn{
-	background: url("svg/bassnotes.svg");
-	background-size: 100% 300px;
-	width:100%;
-	height:300px;
-	position:fixed;
-	overflow:hidden;
-}
-#bt{
-	background: url("svg/bassnumbers.svg");
-	background-size: 100% 300px;
-	width:100%;
-	height:300px;
-	position:fixed;
-	overflow:hidden;
-}
-#full{
-	background-image: url("svg/tcnotes.svg");
-	background-size: 100% 300px;
-	width:100%;
-	height:300px;
-	position:fixed;
-	overflow:hidden;
-}
-#nd{
-	background-image: url("svg/bcnotes.svg");
-	background-size: 100% 300px;
-	width:100%;
-	height:300px;
-	position:fixed;
-	overflow:hidden;
-}
-.is-hidden{
-	bottom:-5000px;
-}
-
-.is-active{
-	bottom:37px;
-}
-.right{
-	float:right;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
 }

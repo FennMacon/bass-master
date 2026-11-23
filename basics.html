@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Basics</title>
     <link rel="stylesheet" type="text/css" href="output.css">
     <link href='https://fonts.googleapis.com/css?family=Covered+By+Your+Grace|Patua+One|Raleway' rel='stylesheet' type='text/css'>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script type="text/javascript" src="script.js"></script>
+    <script src="script.js" defer></script>
 </head>
-<body>
+<body class="lesson-page">
+<a class="skip-link" href="#content">Skip to lesson</a>
 <div id="wrapper">
     <header>
         <a href="index.html"><h1>Bass Master 64</h1></a>
     </header>
     <div class="container">
-        <aside>
-            <ul><h3><a href="./basics.html">Basics</a></h3>
+        <nav class="lesson-nav" aria-label="Lessons">
+            <h2><a href="./basics.html">Basics</a></h2>
+<ul>
                 <li>Staff, Clefs, Ledgers</li>
                 <li>Note Duration</li>
                 <li>Measures and Time Signatures</li>
@@ -22,35 +25,41 @@
                 <li>Dots and Ties</li>
                 <li>Steps and Accidentals</li>
             </ul>
-            <ul><h3><a href="./scales.html">Scales and Key Signatures</a></h3>
+            <h2><a href="./scales.html">Scales and Key Signatures</a></h2>
+<ul>
                 <li>The Major Scale</li>
                 <li>The Minor Scale</li>
                 <li>Scale Degrees</li>
                 <li>Key Signatures</li>
                 <li>Key Signature Calculations</li>
             </ul>
-            <ul><h3><a href="./intervals.html">Intervals</a></h3>
+            <h2><a href="./intervals.html">Intervals</a></h2>
+<ul>
                 <li>Generic Intervals</li>
                 <li>Specific Intervals</li>
                 <li>Writing Intervals</li>
                 <li>Interval Inversion</li>
             </ul>
-            <ul><h3><a href="./chords.html">Chords</a></h3>
+            <h2><a href="./chords.html">Chords</a></h2>
+<ul>
                 <li>Introduction to Chords</li>
                 <li>Triad Inversion</li>
                 <li>Seventh Chords</li>
                 <li>More Seventh Chords</li>
                 <li>Seventh Chord Inversion</li>
             </ul>
-            <ul><h3><a href="./progressions.html">Chord Progressions</a></h3>
+            <h2><a href="./progressions.html">Chord Progressions</a></h2>
+<ul>
                 <li>Nonharmonic Tones</li>
                 <li>Phrases and Cadences</li>
                 <li>Circle Progressions</li>
                 <li>Common Chord Progressions</li>
                 <li>Triads in First Inversions</li>
-                <li>Traids in Second Inversions</li>
+                <li>Triads in Second Inversions</li>
             </ul>
-        </aside>
+        <p><a href="scales-interactive.html">Interactive Scale Explorer</a></p>
+</nav>
+<main id="content" tabindex="-1">
         <article>
             <!-- 1. BASICS -->
             <h2>Basics</h2>
@@ -166,28 +175,30 @@
             </ul>
             <p><em>Bass Tip:</em> Understanding whole and half steps on the fretboard is crucial for scales and riffs.</p>
         </article>
-    </div>
-    <footer>
-        <button id="pButton">Piano</button>
-        <div id="piano" class="is-hidden"></div>
-        <button id="pnButton">Piano Notes</button>
-        <div id="pianonotes" class="is-hidden"></div>
-        <button id="tcButton">Treble Clef</button>
-        <div id="tc" class="is-hidden"></div>
-        <button id="fcButton">Treble Notes</button>
-        <div id="full" class="is-hidden"></div>
-        <button id="bcButton">Bass Clef</button>
-        <div id="bc" class="is-hidden"></div>
-        <button id="ndButton">Bass Notes</button>
-        <div id="nd" class="is-hidden"></div>
-        <button id="bButton">Bass</button>
-        <div id="b" class="is-hidden"></div>
-        <button id="btButton">Tab Numbers</button>
-        <div id="bt" class="is-hidden"></div>
-        <button id="bnButton">Bass Notes</button>
-        <div id="bn" class="is-hidden"></div>      
-        <a href="http://fenn.club"><button class="right">Fenn Macon</button></a>
-    </footer>
+    </main>
+</div>
+    <footer class="reference-toolbar" aria-label="Reference diagrams">
+    <button id="pButton" aria-expanded="false" aria-controls="piano">Piano</button>
+    <figure id="piano" class="reference-panel" hidden aria-labelledby="piano-caption"><img src="svg/piano.svg" alt="Piano reference diagram" loading="lazy"><figcaption id="piano-caption">Piano keyboard with repeating groups of two and three black keys. C is the white key immediately left of each group of two.</figcaption></figure>
+    <button id="pnButton" aria-expanded="false" aria-controls="pianonotes">Piano Notes</button>
+    <figure id="pianonotes" class="reference-panel" hidden aria-labelledby="pianonotes-caption"><img src="svg/pianonotes.svg" alt="Piano Notes reference diagram" loading="lazy"><figcaption id="pianonotes-caption">Piano notes repeat A through G. Black keys represent sharps or flats between neighboring white keys; there is no black key between E and F or B and C.</figcaption></figure>
+    <button id="tcButton" aria-expanded="false" aria-controls="tc">Treble Clef</button>
+    <figure id="tc" class="reference-panel" hidden aria-labelledby="tc-caption"><img src="svg/tc.svg" alt="Treble Clef reference diagram" loading="lazy"><figcaption id="tc-caption">The treble clef marks G on the second staff line from the bottom.</figcaption></figure>
+    <button id="fcButton" aria-expanded="false" aria-controls="full">Treble Notes</button>
+    <figure id="full" class="reference-panel" hidden aria-labelledby="full-caption"><img src="svg/tcnotes.svg" alt="Treble Notes reference diagram" loading="lazy"><figcaption id="full-caption">Treble staff lines from bottom to top are E, G, B, D, F. Spaces are F, A, C, E.</figcaption></figure>
+    <button id="bcButton" aria-expanded="false" aria-controls="bc">Bass Clef</button>
+    <figure id="bc" class="reference-panel" hidden aria-labelledby="bc-caption"><img src="svg/bc.svg" alt="Bass Clef reference diagram" loading="lazy"><figcaption id="bc-caption">The bass clef marks F on the fourth staff line from the bottom, between its two dots.</figcaption></figure>
+    <button id="ndButton" aria-expanded="false" aria-controls="nd">Bass Staff Notes</button>
+    <figure id="nd" class="reference-panel" hidden aria-labelledby="nd-caption"><img src="svg/bcnotes.svg" alt="Bass Staff Notes reference diagram" loading="lazy"><figcaption id="nd-caption">Bass staff lines from bottom to top are G, B, D, F, A. Spaces are A, C, E, G.</figcaption></figure>
+    <button id="bButton" aria-expanded="false" aria-controls="b">Bass</button>
+    <figure id="b" class="reference-panel" hidden aria-labelledby="b-caption"><img src="svg/bass.svg" alt="Bass reference diagram" loading="lazy"><figcaption id="b-caption">A standard four-string bass is tuned E, A, D, G from lowest to highest pitch.</figcaption></figure>
+    <button id="btButton" aria-expanded="false" aria-controls="bt">Tab Numbers</button>
+    <figure id="bt" class="reference-panel" hidden aria-labelledby="bt-caption"><img src="svg/bassnumbers.svg" alt="Tab Numbers reference diagram" loading="lazy"><figcaption id="bt-caption">Bass fret numbers indicate distance from the open string. Zero means open; each fret raises pitch by one semitone.</figcaption></figure>
+    <button id="bnButton" aria-expanded="false" aria-controls="bn">Bass Fretboard Notes</button>
+    <figure id="bn" class="reference-panel" hidden aria-labelledby="bn-caption"><img src="svg/bassnotes.svg" alt="Bass Fretboard Notes reference diagram" loading="lazy"><figcaption id="bn-caption">Each bass fret raises pitch by one semitone. The twelfth fret repeats the open-string note one octave higher.</figcaption></figure>
+    <button id="hideAllButton">Hide All</button>
+    <a class="author-link" href="https://fenn.club">Fenn Macon</a>
+</footer>
 </div>
 </body>
 </html>

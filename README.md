@@ -20,3 +20,14 @@ Selections update the URL without reloading. Bookmark or copy “Link to this vi
 to retain `root`, `scale`, `spelling`, `instrument`, `chord`, and `shape`.
 Root/chord accidentals use ASCII `#` in URLs (encoded as `%23`); invalid values
 fall back to defaults. Staff views redraw when their container width changes.
+
+## Shared lesson styles and controls
+
+Edit `input.scss`, then run `node build-styles.cjs` to refresh `output.css`.
+The source uses plain CSS (also valid SCSS), so this build needs no dependencies.
+Commit both files together. The historical source map is no longer used.
+
+The lesson pages use `script.js` without jQuery. Navigation remains available on
+small screens; reference diagrams include written descriptions, expanded states,
+and Escape-to-close. The reference toolbar flows after the content on smaller
+screens and reserves its measured height when fixed on wider screens.
