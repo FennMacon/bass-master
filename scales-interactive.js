@@ -11,6 +11,16 @@ $(document).ready(function() {
             }
         }
 
+        function getScaleDegree(scalePosition) {
+            const position = scalePosition % scales[currentScale].intervals.length;
+            return currentScale === 'pentatonic' ? pentatonicColorMap[position] + 1 : position + 1;
+        }
+
+        function degreeDescription(degree) {
+            if (degree === 1) return 'root';
+            return `${degree}${{ 2: 'nd', 3: 'rd' }[degree] || 'th'} degree`;
+        }
+
         // Helper function to get fully opaque colors for piano visualization
         function getPianoScaleDegreeColor(scalePosition) {
             // Get the regular color first
@@ -27,6 +37,9 @@ $(document).ready(function() {
 
         const noteSelector = '.white-key, .black-key, .string-note, .staff-note, .caged-shape';
         const controlSelector = '.scale-btn, .note-btn, .accidental-btn, .viz-btn, .caged-btn';
+        const diagramSelector = '.visualization-container > [role="toolbar"], #caged-fretboard';
+        const noteDetailsPrompt = 'Select a note to see its details.';
+        const cagedDetailsPrompt = 'Select a chord note to see its details.';
 
         // Current state
         let currentScale = 'major';
@@ -165,11 +178,9 @@ $(document).ready(function() {
                     displayRoot = getNoteName(rootIndex, preferredAccidentalType);
                 }
 
-                // Update scale pattern display
-                const patternDisplay = `<span class="scale-pattern">${scaleInfo.pattern}</span>`;
-
-                // Update the display with both note names and pattern
-                $('#scale-notes').html(`${displayRoot} ${scaleName} Scale: ${scaleNotes.join(' - ')}<br>Step Pattern: ${patternDisplay}`);
+                $('#scale-name').text(`${displayRoot} ${scaleName.toLowerCase()} scale`);
+                $('#scale-note-list').text(scaleNotes.join(' · '));
+                $('#scale-step-pattern').text(`Step pattern: ${scaleInfo.pattern.split('-').join(' · ')}`);
 
                 // Toggle color legend based on scale type
                 if (currentScale === 'pentatonic') {
@@ -186,7 +197,7 @@ $(document).ready(function() {
                 updateAllVisualizations();
             } catch (error) {
                 console.error("Error in updateScaleNotesDisplay:", error);
-                $('#scale-notes').html(`Error displaying scale: ${error.message}`);
+                $('#scale-name').text('The scale could not be displayed.');
             }
         }
 
@@ -233,11 +244,6 @@ $(document).ready(function() {
             const pianoContainer = $('<div class="piano-container"></div>');
                 $('#piano-viz').append(pianoContainer);
 
-                // Create a single global tooltip if it doesn't exist
-                if ($('#global-tooltip').length === 0) {
-                    $('body').append('<div id="global-tooltip" class="note-tooltip"></div>');
-                }
-
                 // White key names in order - adding a C at the end
                 const whiteKeyNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'A', 'B', 'C'];
 
@@ -247,6 +253,7 @@ $(document).ready(function() {
                     whiteKey.text(whiteKeyNames[i]);
                     whiteKey.attr('data-note', whiteKeyNames[i]);
                     whiteKey.attr('data-index', i);
+                    whiteKey.attr('data-register', Math.floor(i / 7) + 1);
                 pianoContainer.append(whiteKey);
             }
 
@@ -290,6 +297,7 @@ $(document).ready(function() {
                     // Set data attributes for note information
                     blackKeyElement.attr('data-note', `${blackKey.sharp}/${blackKey.flat}`);
                     blackKeyElement.attr('data-note-index', blackKey.noteIndex);
+                    blackKeyElement.attr('data-register', Math.floor(blackKey.pos / 7) + 1);
 
                     pianoContainer.append(blackKeyElement);
                 });
@@ -344,10 +352,8 @@ $(document).ready(function() {
                         const noteName = getNoteName(noteIndex);
 
                         // Get scale degree for tooltip
-                        const scaleDegree = scalePosition + 1;
-                        const degreeText = scaleDegree <= 7 ?
-                            `${scaleDegree}${['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th'][scaleDegree]} degree` :
-                            'Octave';
+                        const scaleDegree = getScaleDegree(scalePosition);
+                        const degreeText = degreeDescription(scaleDegree);
 
                         // Store note info for tooltips
                         keyInfos[keyId] = `${noteName} - ${degreeText}`;
@@ -385,10 +391,8 @@ $(document).ready(function() {
                         const noteName = getNoteName(noteIndex);
 
                         // Get scale degree for tooltip
-                        const scaleDegree = scalePosition + 1;
-                        const degreeText = scaleDegree <= 7 ?
-                            `${scaleDegree}${['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th'][scaleDegree]} degree` :
-                            'Octave';
+                        const scaleDegree = getScaleDegree(scalePosition);
+                        const degreeText = degreeDescription(scaleDegree);
 
                         // Store note info for tooltips
                         keyInfos[keyId] = `${noteName} - ${degreeText}`;
@@ -451,12 +455,6 @@ $(document).ready(function() {
                         if (keyInfos[keyId]) {
                             $key.addClass('scale-note')
                                 .data('note-info', keyInfos[keyId]);
-
-                            // Make text white for visibility against colored background
-                            $key.find('.black-key-label, .accidental-label').css({
-                                'color': '#fff',
-                                'top': '10%' // Move text up for better visibility
-                            });
                         }
                     }
                 });
@@ -467,13 +465,6 @@ $(document).ready(function() {
                         item.key.addClass('root-note');
                     }
                 });
-
-                // Make sure global tooltip exists
-                if ($('#global-tooltip').length === 0) {
-                    $('body').append('<div id="global-tooltip" class="note-tooltip"></div>');
-                }
-
-                // Apply tooltip handlers
 
             } catch (error) {
                 console.error("Error in updatePianoVisualization:", error);
@@ -688,23 +679,17 @@ $(document).ready(function() {
                             }
 
                             // Get scale degree and add it to the note marker
-                            const scaleDegree = scaleIndex + 1;
-                            noteMarker.text(scaleDegree > 7 ? 'R' : scaleDegree);
+                            const scaleDegree = getScaleDegree(scaleIndex);
+                            noteMarker.text(scaleDegree === 1 ? 'R' : scaleDegree);
 
                             // Get note info for tooltip
                             const noteName = getNoteName(noteIndex);
 
                             // Scale degree info
-                            let degreeText = '';
-                            if (scaleDegree <= 7) {
-                                const degreeSuffix = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th'][scaleDegree];
-                                degreeText = `${scaleDegree}${degreeSuffix} degree`;
-                            } else {
-                                degreeText = 'Octave';
-                            }
+                            const degreeText = degreeDescription(scaleDegree);
 
                             // Set tooltip content
-                            noteMarker.attr('title', `${noteName} - ${degreeText}\nString: ${stringName}, Fret: ${fret}`);
+                            noteMarker.attr('data-note-info', `${noteName} - ${degreeText}\nString: ${stringName}, Fret: ${fret}`);
 
                             // Add the note marker to the fretboard
                             $('#bass-viz').find('.fretboard').append(noteMarker);
@@ -814,23 +799,17 @@ $(document).ready(function() {
                             }
 
                             // Add scale degree number inside the note
-                            const scaleDegree = scaleIndex + 1;
-                            noteMarker.text(scaleDegree > 7 ? 'R' : scaleDegree);
+                            const scaleDegree = getScaleDegree(scaleIndex);
+                            noteMarker.text(scaleDegree === 1 ? 'R' : scaleDegree);
 
                             // Get note info for tooltip
                         const noteName = getNoteName(noteIndex);
 
                             // Scale degree info
-                            let degreeText = '';
-                            if (scaleDegree <= 7) {
-                                const degreeSuffix = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th'][scaleDegree];
-                                degreeText = `${scaleDegree}${degreeSuffix} degree`;
-                            } else {
-                                degreeText = 'Octave';
-                            }
+                            const degreeText = degreeDescription(scaleDegree);
 
                             // Set tooltip content
-                            noteMarker.attr('title', `${noteName} - ${degreeText}\nString: ${stringName}, Fret: ${fret}`);
+                            noteMarker.attr('data-note-info', `${noteName} - ${degreeText}\nString: ${stringName}, Fret: ${fret}`);
 
                             // Add the note marker to the fretboard
                             $('#guitar-viz').find('.fretboard').append(noteMarker);
@@ -1059,17 +1038,11 @@ $(document).ready(function() {
                     const displayNoteName = noteName;
 
                     // Scale degree info
-                    const scaleDegree = (scalePosition % 7) + 1;
-                    let degreeText = '';
-                    if (scaleDegree <= 7) {
-                        const degreeSuffix = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th'][scaleDegree];
-                        degreeText = `${scaleDegree}${degreeSuffix} degree`;
-                    } else {
-                        degreeText = 'Octave';
-                    }
+                    const scaleDegree = getScaleDegree(scalePosition);
+                    const degreeText = degreeDescription(scaleDegree);
 
                     // Set tooltip content - include octave info
-                    noteElement.attr('title', `${displayNoteName}${octave} - ${degreeText}`);
+                    noteElement.attr('data-note-info', `${displayNoteName}${octave} - ${degreeText}`);
                     noteElement.attr('data-octave', octave);
 
                     // Add the note to the staff
@@ -1273,17 +1246,11 @@ $(document).ready(function() {
                     const displayNoteName = noteName;
 
                     // Scale degree info
-                    const scaleDegree = (scalePosition % 7) + 1;
-                    let degreeText = '';
-                    if (scaleDegree <= 7) {
-                        const degreeSuffix = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th'][scaleDegree];
-                        degreeText = `${scaleDegree}${degreeSuffix} degree`;
-                    } else {
-                        degreeText = 'Octave';
-                    }
+                    const scaleDegree = getScaleDegree(scalePosition);
+                    const degreeText = degreeDescription(scaleDegree);
 
                     // Set tooltip content - include octave info
-                    noteElement.attr('title', `${displayNoteName}${octave} - ${degreeText}`);
+                    noteElement.attr('data-note-info', `${displayNoteName}${octave} - ${degreeText}`);
                     noteElement.attr('data-octave', octave);
 
                     // Add the note to the staff
@@ -1491,8 +1458,7 @@ $(document).ready(function() {
         // CAGED System Implementation
         let cagedCurrentRoot = 'C';
         let cagedCurrentShape = 'C';
-        let cagedCurrentPattern = '1';
-        let cagedCurrentInstrument = 'guitar';
+        const cagedFretCount = 15; // Frets 0–14 keep the highest movable shape together.
 
 
 
@@ -1516,356 +1482,84 @@ $(document).ready(function() {
 
         // Initialize CAGED fretboard
         function initCagedFretboard() {
-            const fretboard = $('#caged-fretboard');
-            fretboard.empty();
-
-            // Add fret lines
-            for (let i = 0; i <= 12; i++) {
-                const fret = $('<div class="fret"></div>');
-                fret.css('left', `${i * (100 / 13)}%`);
-                fret.attr('data-fret', i);
-                fretboard.append(fret);
-
-                // Add fret number labels at the bottom
-                if (i <= 12) {
-                    const fretNumber = $('<div class="fret-number fret-label"></div>');
-                    fretNumber.text(i);
-                    fretNumber.css('left', `${(i * (100 / 13)) + ((100 / 13) / 2)}%`);
-                    fretboard.append(fretNumber);
-                }
+            const fretboard = $('#caged-fretboard').empty();
+            for (let fret = 0; fret < cagedFretCount; fret += 1) {
+                $('<div class="fret" aria-hidden="true"></div>')
+                    .attr('data-fret', fret)
+                    .css('left', `${100 * fret / cagedFretCount}%`)
+                    .appendTo(fretboard);
+                $('<div class="fret-number fret-label" aria-hidden="true"></div>')
+                    .text(fret)
+                    .css('left', `${cagedFretCenter(fret)}%`)
+                    .appendTo(fretboard);
             }
 
-            // Special styling for the nut (0th fret)
-            // The CSS should apply via the data-fret="0" attribute, but let's make sure
-            fretboard.find('.fret[data-fret="0"]').css({
-                'width': '4px',
-                'background': 'linear-gradient(to right, #888, #444, #888)',
-                'box-shadow': '2px 0 3px rgba(0, 0, 0, 0.3)',
-                'z-index': '10'
+            ['E', 'A', 'D', 'G', 'B', 'e'].forEach((name, index) => {
+                const top = `${cagedStringPosition(index + 1)}%`;
+                $('<div class="caged-string" aria-hidden="true"></div>').css({ top }).appendTo(fretboard);
+                $('<span class="caged-string-name" aria-hidden="true"></span>').text(name).css({ top }).appendTo(fretboard);
             });
 
-            // Add fret markers (dots)
-            const markerPositions = [4, 6, 8, 10, 13]; // Frets with markers (3rd, 5th, 7th, 9th, 12th)
-
-            markerPositions.forEach(pos => {
-                // Calculate horizontal center position in the middle of the fret
-                const xPos = (pos - 0.5) * (100 / 13); // Center between frets
-
-                if (pos === 13) {
-                    // Add double dots at the 12th fret
-
-                    // For guitar: top dot between B and G strings, bottom dot between D and A
-                    // For bass: adjust positions accordingly with 4 strings
-                    const numStrings = (cagedCurrentInstrument === 'guitar') ? 6 : 4;
-
-                    // Define positions based on number of strings
-                    // Guitar: Top dot between strings 4 and 5 (G and B)
-                    // Bass: Top dot positioned proportionally
-                    const topDotPos = 85 - (numStrings === 6 ? 3.5 : 2.5) * (70 / numStrings);
-
-                    // Guitar: Bottom dot between strings 2 and 3 (A and D)
-                    // Bass: Bottom dot positioned proportionally
-                    const bottomDotPos = 85 - (numStrings === 6 ? 1.5 : 0.75) * (70 / numStrings);
-
-                    // Add top dot
-                    $('<div></div>').css({
-                        'position': 'absolute',
-                        'width': '16px',
-                        'height': '16px',
-                        'border-radius': '50%',
-                        'background-color': 'rgba(245, 245, 245, 0.9)',
-                        'box-shadow': 'inset 0 0 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(255, 255, 255, 0.5)',
-                        'transform': 'translate(-50%, -50%)',
-                        'left': `${xPos}%`,
-                        'top': `${topDotPos}%`,
-                        'z-index': '2'
-                    }).appendTo(fretboard);
-
-                    // Add bottom dot
-                    $('<div></div>').css({
-                        'position': 'absolute',
-                        'width': '16px',
-                        'height': '16px',
-                        'border-radius': '50%',
-                        'background-color': 'rgba(245, 245, 245, 0.9)',
-                        'box-shadow': 'inset 0 0 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(255, 255, 255, 0.5)',
-                        'transform': 'translate(-50%, -50%)',
-                        'left': `${xPos}%`,
-                        'top': `${bottomDotPos}%`,
-                        'z-index': '2'
-                    }).appendTo(fretboard);
-                } else {
-                    // Single dot should be between G and D string (or positioned proportionally for bass)
-                    const numStrings = (cagedCurrentInstrument === 'guitar') ? 6 : 4;
-
-                    // For guitar: single dot between strings 3 and 4 (D and G)
-                    // For bass: position proportionally
-                    const dotPos = 85 - (numStrings === 6 ? 2.5 : 1.5) * (70 / numStrings);
-
-                    // Add single dot
-                    $('<div></div>').css({
-                        'position': 'absolute',
-                        'width': '16px',
-                        'height': '16px',
-                        'border-radius': '50%',
-                        'background-color': 'rgba(240, 240, 240, 0.8)',
-                        'box-shadow': 'inset 0 0 3px rgba(0, 0, 0, 0.7)',
-                        'transform': 'translate(-50%, -50%)',
-                        'left': `${xPos}%`,
-                        'top': `${dotPos}%`,
-                        'z-index': '2'
-                    }).appendTo(fretboard);
-                }
-            });
-
-            // Add strings based on instrument
-            if (cagedCurrentInstrument === 'guitar') {
-                // Add 6 strings for guitar
-                const guitarStrings = ['E', 'A', 'D', 'G', 'B', 'e'];
-
-                for (let i = 0; i < 6; i++) {
-                    const stringTop = 85 - (i * 70 / 6);
-
-                    // Create string line
-                    const string = $('<div class="caged-string"></div>');
-                    string.css('top', `${stringTop}%`);
-                    string.attr('data-string', guitarStrings[i]);
-                    string.attr('data-string-num', i + 1); // 1=E, 2=A, etc.
-
-                    // Add string label with white round background
-                    const stringLabel = $('<div></div>').css({
-                        'position': 'absolute',
-                        'width': '18px',
-                        'height': '18px',
-                        'border-radius': '50%',
-                        'background-color': 'white',
-                        'display': 'flex',
-                        'align-items': 'center',
-                        'justify-content': 'center',
-                        'font-weight': 'bold',
-                        'font-size': '12px',
-                        'color': '#333',
-                        'box-shadow': '0 1px 2px rgba(0,0,0,0.2)',
-                        'z-index': '3',
-                        'left': '4px',
-                        'top': `${stringTop}%`,
-                        'transform': 'translateY(-50%)'
-                    }).text(guitarStrings[i]);
-
-                    fretboard.append(string);
-                    fretboard.append(stringLabel);
-                }
-
-                // Update to show current guitar shape
-                updateCagedFretboard();
+            for (const fret of [3, 5, 7, 9, 12]) {
+                const positions = fret === 12 ? [32, 66] : [49];
+                positions.forEach(top => {
+                    $('<div class="caged-marker" aria-hidden="true"></div>')
+                        .css({ top: `${top}%`, left: `${cagedFretCenter(fret)}%` })
+                        .appendTo(fretboard);
+                });
             }
+
+            updateCagedFretboard();
         }
 
-        // Update CAGED fretboard with current settings
+        function cagedFretCenter(fret) {
+            return 100 * (fret + 0.5) / cagedFretCount;
+        }
+
+        function cagedStringPosition(string) {
+            return 80 - (string - 1) * 12;
+        }
+
         function updateCagedFretboard() {
             const fretboard = $('#caged-fretboard');
-
-            // Remove existing shapes
             fretboard.find('.caged-shape').remove();
-
-            // Get the root note index (0-11)
-            const rootIndex = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].indexOf(cagedCurrentRoot);
-
-            if (cagedCurrentInstrument === 'guitar') {
-                updateGuitarCagedFretboard(fretboard, rootIndex);
+            const rootIndex = sharpNotes.indexOf(cagedCurrentRoot.replace('#', '♯'));
+            const shapes = cagedCurrentShape === 'all' ? ['C', 'A', 'G', 'E', 'D'] : [cagedCurrentShape];
+            const positions = new Map();
+            for (const shape of shapes) {
+                for (const [string, fret, degree] of calculateCagedPositions(shape, rootIndex)) {
+                    const position = `${string}:${fret}`;
+                    if (!positions.has(position)) positions.set(position, { string, fret, degree, shapes: [] });
+                    positions.get(position).shapes.push(shape);
+                }
             }
-        }
 
-        // Update guitar CAGED visualization
-        function updateGuitarCagedFretboard(fretboard, rootIndex) {
-            // CAGED system chord shapes
-            const cShapePositions = calculateShapePositions('C', rootIndex);
-            const aShapePositions = calculateShapePositions('A', rootIndex);
-            const gShapePositions = calculateShapePositions('G', rootIndex);
-            const eShapePositions = calculateShapePositions('E', rootIndex);
-            const dShapePositions = calculateShapePositions('D', rootIndex);
-
-            // Display the appropriate shape(s)
-            if (cagedCurrentShape === 'all') {
-                addShapeToFretboard(fretboard, cShapePositions, 'C');
-                addShapeToFretboard(fretboard, aShapePositions, 'A');
-                addShapeToFretboard(fretboard, gShapePositions, 'G');
-                addShapeToFretboard(fretboard, eShapePositions, 'E');
-                addShapeToFretboard(fretboard, dShapePositions, 'D');
-            } else {
-                // Show selected shape
-                const positions = {
-                    'C': cShapePositions,
-                    'A': aShapePositions,
-                    'G': gShapePositions,
-                    'E': eShapePositions,
-                    'D': dShapePositions
-                }[cagedCurrentShape];
-
-                addShapeToFretboard(fretboard, positions, cagedCurrentShape);
-            }
-        }
-
-
-        // Calculate positions for a guitar CAGED shape
-        function calculateShapePositions(shape, rootIndex) {
-            // Define the chord shapes in terms of finger positions
-            // [string, fret, note_type] where note_type is: 1=root, 3=third, 5=fifth
-            // String numbers: 1=E(bottom), 2=A, 3=D, 4=G, 5=B, 6=e(top)
-            const baseShapes = {
-                'C': [
-                    [2, 3, 1], // Root on A string
-                    [3, 2, 5], // 5th on D string
-                    [4, 0, 3], // 3rd on G string
-                    [5, 1, 1], // Root on B string
-                    [6, 0, 5]  // 5th on e string
-                ],
-                'A': [
-                    [2, 0, 1], // Root on A string
-                    [3, 2, 5], // 5th on D string
-                    [4, 2, 1], // Root on G string
-                    [5, 2, 3], // 3rd on B string
-                    [6, 0, 5]  // 5th on e string
-                ],
-                'G': [
-                    [1, 3, 1], // Root on E string
-                    [2, 2, 3], // 3rd on A string
-                    [3, 0, 5], // 5th on D string
-                    [4, 0, 1], // Root on G string
-                    [5, 0, 3], // 3rd on B string
-                    [6, 3, 1]  // Root on e string
-                ],
-                'E': [
-                    [1, 0, 1], // Root on E string
-                    [2, 2, 5], // 5th on A string
-                    [3, 2, 1], // Root on D string
-                    [4, 1, 3], // 3rd on G string
-                    [5, 0, 5], // 5th on B string
-                    [6, 0, 1]  // Root on e string
-                ],
-                'D': [
-                    [3, 0, 1], // Root on D string
-                    [4, 2, 5], // 5th on G string
-                    [5, 3, 1], // Root on B string
-                    [6, 2, 3]  // 3rd on e string
-                ]
+            const stringNames = ['low E', 'A', 'D', 'G', 'B', 'high E'];
+            const degrees = {
+                1: { text: 'R', label: 'root', interval: 0, className: 'root' },
+                3: { text: '3', label: 'major third', interval: 4, className: 'third' },
+                5: { text: '5', label: 'perfect fifth', interval: 7, className: 'fifth' }
             };
-
-            // Calculate fret offset based on root note
-            let fretOffset = 0;
-
-            switch(shape) {
-                case 'C':
-                    fretOffset = (rootIndex - 0 + 12) % 12; // C shape: root on A string 3rd fret is C
-                    break;
-                case 'A':
-                    fretOffset = (rootIndex - 9 + 12) % 12; // A shape: root on E string open is A
-                    break;
-                case 'G':
-                    fretOffset = (rootIndex - 7 + 12) % 12; // G shape: root on E string 3rd fret is G
-                    break;
-                case 'E':
-                    fretOffset = (rootIndex - 4 + 12) % 12; // E shape: root on E string open is E
-                    break;
-                case 'D':
-                    fretOffset = (rootIndex - 2 + 12) % 12; // D shape: root on D string open is D
-                    break;
+            const sortedPositions = [...positions.values()].sort((a,b) => b.string - a.string || a.fret - b.fret);
+            for (const { string, fret, degree, shapes: noteShapes } of sortedPositions) {
+                const { text, label, interval, className } = degrees[degree];
+                const noteName = notes[(rootIndex + interval) % 12];
+                const shapeNames = `${noteShapes.join(' and ')} ${noteShapes.length === 1 ? 'shape' : 'shapes'}`;
+                $('<div class="caged-shape"></div>')
+                    .addClass(className)
+                    .text(text)
+                    .attr('data-note-info', `${noteName} · ${label} · ${stringNames[string - 1]} string, fret ${fret} · ${shapeNames}`)
+                    .css({ left: `${cagedFretCenter(fret)}%`, top: `${cagedStringPosition(string)}%` })
+                    .appendTo(fretboard);
             }
 
-            // Get positions with fret offset applied
-            let adjustedPositions = baseShapes[shape].map(pos => {
-                const [string, fret, noteType] = pos;
-                return [string, (fret + fretOffset) % 12, noteType];
-            });
-
-            // Add duplicate positions at fret 12 for any notes at fret 0
-            // This ensures that open string notes also appear at the octave
-            let octavePositions = [];
-            adjustedPositions.forEach(pos => {
-                const [string, fret, noteType] = pos;
-                if (fret === 0) {
-                    octavePositions.push([string, 12, noteType]);
-                }
-            });
-
-            // Combine the original positions with octave positions
-            return [...adjustedPositions, ...octavePositions];
-        }
-
-
-        // Add a guitar chord shape to the fretboard
-        function addShapeToFretboard(fretboard, positions, shape) {
-            // Colors for different note types
-            const noteColors = {
-                1: '#ff5252', // Root - red
-                3: '#2196f3', // 3rd - blue
-                5: '#4caf50'  // 5th - green
-            };
-
-            // Add each note in the shape
-            positions.forEach(pos => {
-                const [stringIndex, fret, noteType] = pos;
-
-                // Convert string index to actual string number based on our new string layout
-                // In our layout: 1=E(bottom), 2=A, 3=D, 4=G, 5=B, 6=e(top)
-                // This directly maps to the stringElements array since we've reordered the strings
-
-                // Find the string position
-                const stringElements = fretboard.find('.caged-string');
-                const stringElement = $(stringElements[stringIndex - 1]);
-                if (stringElement.length === 0) return; // Skip if string not found
-
-                const stringPosition = stringElement.css('top');
-
-                // Create the note element
-                const note = $('<div class="caged-shape"></div>');
-                note.css({
-                    'background-color': noteColors[noteType],
-                    'left': `${(fret * (100 / 13)) + ((100 / 13) / 2)}%`,
-                    'top': stringPosition
-                });
-
-                // Add root note styling
-                if (noteType === 1) {
-                    note.addClass('caged-root');
-                }
-
-                // Add note text inside the circle
-                if (noteType === 1) {
-                    note.text('R');
-                } else if (noteType === 3) {
-                    note.text('3');
-                } else if (noteType === 5) {
-                    note.text('5');
-                }
-
-                // Add shape info to the note
-                note.attr('data-shape', shape);
-                note.attr('data-string', stringIndex);
-                note.attr('data-fret', fret);
-
-                // Add tooltip
-                const noteNames = ['C', 'C♯/D♭', 'D', 'D♯/E♭', 'E', 'F', 'F♯/G♭', 'G', 'G♯/A♭', 'A', 'A♯/B♭', 'B'];
-                const rootNoteName = noteNames[['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].indexOf(cagedCurrentRoot)];
-
-                let noteName;
-                if (noteType === 1) {
-                    noteName = rootNoteName;
-                } else if (noteType === 3) {
-                    // Calculate major 3rd (4 semitones up)
-                    const thirdIndex = (['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].indexOf(cagedCurrentRoot) + 4) % 12;
-                    noteName = noteNames[thirdIndex];
-                } else if (noteType === 5) {
-                    // Calculate perfect 5th (7 semitones up)
-                    const fifthIndex = (['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].indexOf(cagedCurrentRoot) + 7) % 12;
-                    noteName = noteNames[fifthIndex];
-                }
-
-                note.attr('title', `${noteName} (${noteType === 1 ? 'Root' : noteType === 3 ? '3rd' : '5th'})`);
-
-                // Add to fretboard
-                fretboard.append(note);
-            });
+            const shapeLabel = cagedCurrentShape === 'all' ? 'all shapes' : `${cagedCurrentShape} shape`;
+            $('#chord-result').text(`${notes[rootIndex]} major · ${shapeLabel}`);
+            const markers = fretboard.find('.caged-shape').get();
+            if (markers.length) {
+                const leftmost = Math.min(...markers.map(marker => marker.offsetLeft));
+                fretboard.parent().scrollLeft(Math.max(0, leftmost - 48));
+            }
         }
 
         // Initialize all visualizations
@@ -1889,27 +1583,11 @@ $(document).ready(function() {
 
         // Initialize everything on document ready
         try {
-            // Create a global tooltip element that will be used by all visualizations
-            if ($('#global-tooltip').length === 0) {
-                $('body').append('<div id="global-tooltip" class="note-tooltip"></div>');
-            }
-
-            // Make tooltip appear above everything else
-            $('#global-tooltip').css({
-                'position': 'fixed',
-                'z-index': 9999,
-                'pointer-events': 'none'
-            });
-
-            // Initialize and show the first visualization (piano)
             initAllVisualizations();
             updateScaleNotesDisplay();
-
-            // Ensure piano tooltips are working on initial load
-
         } catch (error) {
             console.error("Error during initialization:", error);
-            $('#scale-notes').html(`Error initializing: ${error.message}`);
+            $('#scale-name').text('The scale explorer could not be loaded.');
         }
 
         // Update all visualizations when something changes
@@ -1951,19 +1629,74 @@ $(document).ready(function() {
         }
 
         function noteDetails(element) {
-            const note = $(element);
-            return note.data('note-info') || note.attr('title') || note.data('title') ||
-                `${note.attr('data-note') || note.text().trim()} — outside the selected scale`;
+            const info = $(element).data('note-info') || element.dataset.noteInfo ||
+                `${element.dataset.note || element.textContent.trim()} — outside the selected scale`;
+            const register = element.dataset.register;
+            return register ? `${info} · keyboard register ${register}` : info;
         }
+
+        function notePosition(element) {
+            const bounds = element.getBoundingClientRect();
+            return {
+                element,
+                x: (bounds.left + bounds.right) / 2,
+                y: (bounds.top + bounds.bottom) / 2
+            };
+        }
+
+        function diagramNotes(diagram) {
+            return [...diagram.querySelectorAll(noteSelector)];
+        }
+
         function refreshNoteAccess() {
-            $(noteSelector).each(function() {
-                const info = noteDetails(this);
-                const visual = this.closest('.piano-visual, .bass-visual, .guitar-visual, .treble-visual, .bass-clef-visual');
-                const visible = !visual || visual.classList.contains('active');
-                $(this).attr({ role: 'button', tabindex: visible ? '0' : '-1', 'aria-label': info,
-                    'aria-describedby': this.closest('#caged-fretboard') ? 'caged-note-details' : 'note-details' });
+            document.querySelectorAll(diagramSelector).forEach(diagram => {
+                diagram.querySelectorAll('.fret-label, .clef-symbol, .note-accidental')
+                    .forEach(mark => mark.setAttribute('aria-hidden', 'true'));
+                const notes = diagramNotes(diagram);
+                const visible = diagram.id === 'caged-fretboard' || diagram.classList.contains('active');
+                const current = visible && (notes.find(note => note.tabIndex === 0) || notes[0]);
+                notes.forEach(note => {
+                    note.setAttribute('role', 'button');
+                    note.setAttribute('aria-label', noteDetails(note));
+                    note.tabIndex = note === current ? 0 : -1;
+                });
             });
         }
+
+        function setTabStop(diagram, note) {
+            const previous = diagram.querySelector('[tabindex="0"]');
+            if (previous && previous !== note) previous.tabIndex = -1;
+            note.tabIndex = 0;
+        }
+
+        function moveNoteFocus(note, key) {
+            if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return false;
+            const diagram = note.closest(diagramSelector);
+            const fretboard = note.matches('.string-note, .caged-shape');
+            const {x, y} = notePosition(note);
+            const notes = diagramNotes(diagram).map(notePosition);
+            const row = notes.filter(candidate => !fretboard || Math.abs(candidate.y - y) < 2);
+            const orderedRow = row.sort((a, b) => a.x - b.x);
+            const index = orderedRow.findIndex(candidate => candidate.element === note);
+            let target;
+
+            if (key === 'ArrowLeft') target = orderedRow[index - 1];
+            if (key === 'ArrowRight') target = orderedRow[index + 1];
+            if (key === 'Home') target = orderedRow[0];
+            if (key === 'End') target = orderedRow.at(-1);
+            if (fretboard && (key === 'ArrowUp' || key === 'ArrowDown')) {
+                const direction = key === 'ArrowUp' ? -1 : 1;
+                target = notes.filter(candidate => (candidate.y - y) * direction > 2)
+                    .sort((a, b) => (a.y - b.y) * direction || Math.abs(a.x - x) - Math.abs(b.x - x))[0];
+            }
+
+            if (!target || target.element === note) return false;
+            setTabStop(diagram, target.element);
+            target.element.focus({ preventScroll: true });
+            target.element.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            return true;
+        }
+
         function syncControls() {
             $(controlSelector).each(function() {
                 $(this).attr('aria-pressed', this.classList.contains('active') ? 'true' : 'false');
@@ -1971,7 +1704,7 @@ $(document).ready(function() {
             $('.piano-visual, .bass-visual, .guitar-visual, .treble-visual, .bass-clef-visual').each(function() {
                 $(this).attr('aria-hidden', this.classList.contains('active') ? 'false' : 'true');
             });
-            $('#selection-link').attr('href', location.href);
+            $('#selection-link').attr('href', selectionUrl().href);
         }
         function restoreSelections() {
             const params = new URLSearchParams(location.search);
@@ -1999,7 +1732,7 @@ $(document).ready(function() {
             $('.piano-visual, .bass-visual, .guitar-visual, .treble-visual, .bass-clef-visual').removeClass('active');
             $(`#${currentVisualization}-viz`).addClass('active');
         }
-        function saveSelections() {
+        function selectionUrl() {
             const url = new URL(location.href);
             url.searchParams.set('root', $('.note-btn.active').attr('data-note'));
             url.searchParams.set('scale', currentScale);
@@ -2007,35 +1740,75 @@ $(document).ready(function() {
             url.searchParams.set('instrument', currentVisualization);
             url.searchParams.set('chord', cagedCurrentRoot);
             url.searchParams.set('shape', cagedCurrentShape);
-            try { history.replaceState(null, '', url); } catch (error) { /* Some file:// browsers restrict history. */ }
+            return url;
+        }
+
+        function saveSelections() {
+            const url = selectionUrl();
+            try {
+                history.replaceState(null, '', url);
+            } catch {
+                // Browsers can restrict history changes when the page is opened from disk.
+            }
             syncControls();
         }
-        function showNoteDetails(element) {
-            $(element.closest('#caged-fretboard') ? '#caged-note-details' : '#note-details').text(noteDetails(element));
+
+        function noteStatus(note) {
+            return note.closest('#caged-fretboard') ? '#caged-note-details' : '#note-details';
         }
-        $(document).on('click.noteAccess focusin.noteAccess', noteSelector, function() {
+
+        function showNoteDetails(note) {
+            const status = $(noteStatus(note));
+            const details = noteDetails(note);
+            if (status.text() !== details) status.text(details);
+        }
+
+        $(diagramSelector).on('click.noteAccess focusin.noteAccess', noteSelector, function() {
+            setTabStop(this.closest(diagramSelector), this);
+            showNoteDetails(this);
+        }).on('mouseenter.noteAccess', noteSelector, function() {
             showNoteDetails(this);
         }).on('keydown.noteAccess', noteSelector, function(event) {
-            if (event.key === 'Enter' || event.key === ' ') {
+            if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+            if (event.key === 'Enter') {
                 event.preventDefault();
                 showNoteDetails(this);
+            } else if (event.key === ' ') {
+                event.preventDefault();
             } else if (event.key === 'Escape') {
-                $('#note-details, #caged-note-details').text('Select a note to see its details.');
-                $('#global-tooltip').css('opacity', 0);
+                const status = noteStatus(this);
+                $(status).text(status === '#note-details' ? noteDetailsPrompt : cagedDetailsPrompt);
+            } else if (moveNoteFocus(this, event.key)) {
+                event.preventDefault();
             }
-        }).on('mouseenter.noteAccess', noteSelector, function(event) {
-            const tooltip = $('#global-tooltip');
-            tooltip.text(noteDetails(this)).css('opacity', 1);
-            const rect = this.getBoundingClientRect();
-            tooltip.css({ left: `${Math.max(8, Math.min(rect.left, innerWidth - tooltip.outerWidth() - 8))}px`,
-                top: `${Math.max(8, rect.top - tooltip.outerHeight() - 8)}px` });
-        }).on('mouseleave.noteAccess', noteSelector, function() {
-            $('#global-tooltip').css('opacity', 0);
-        }).on('click.selection', controlSelector, function() {
-            $('#global-tooltip').css('opacity', 0);
-            $('#note-details, #caged-note-details').text('Select a note to see its details.');
+        }).on('keyup.noteAccess', noteSelector, function(event) {
+            if (event.key === ' ') showNoteDetails(this);
+        });
+
+        $(document).on('click.selection', controlSelector, function() {
+            if (this.matches('.caged-btn')) {
+                $('#caged-note-details').text(cagedDetailsPrompt);
+            } else {
+                $('#note-details').text(noteDetailsPrompt);
+            }
+            $('#copy-status').empty();
+            $('#share-fallback').prop('hidden', true);
             saveSelections();
         });
+
+        $('#copy-view').prop('hidden', false).on('click', async function() {
+            const address = selectionUrl().href;
+            try {
+                await navigator.clipboard.writeText(address);
+                $('#share-fallback').prop('hidden', true);
+                $('#copy-status').text('View link copied.');
+            } catch {
+                $('#share-fallback').prop('hidden', false);
+                $('#share-address').val(address).trigger('focus').get(0).select();
+                $('#copy-status').text('The address is selected. Copy it to share this view.');
+            }
+        });
+
         window.addEventListener('popstate', () => {
             restoreSelections();
             updateScaleNotesDisplay();
@@ -2043,13 +1816,24 @@ $(document).ready(function() {
             refreshNoteAccess();
         });
         let pendingResize;
-        new ResizeObserver(() => {
-            cancelAnimationFrame(pendingResize);
-            pendingResize = requestAnimationFrame(() => {
-                $('#global-tooltip').css('opacity', 0);
-                if (currentVisualization === 'treble' || currentVisualization === 'bass-clef') updateAllVisualizations();
-            });
-        }).observe(document.querySelector('.visualization-container'));
+        if ('ResizeObserver' in window) {
+            new ResizeObserver(() => {
+                cancelAnimationFrame(pendingResize);
+                pendingResize = requestAnimationFrame(() => {
+                    if (currentVisualization !== 'treble' && currentVisualization !== 'bass-clef') return;
+                    const diagram = document.getElementById(`${currentVisualization}-viz`);
+                    const notes = diagramNotes(diagram);
+                    const focusedIndex = notes.indexOf(document.activeElement);
+                    const tabIndex = notes.findIndex(note => note.tabIndex === 0);
+                    updateAllVisualizations();
+                    const current = diagramNotes(diagram)[tabIndex];
+                    if (current) {
+                        setTabStop(diagram, current);
+                        if (focusedIndex === tabIndex) current.focus({ preventScroll: true });
+                    }
+                });
+            }).observe(document.querySelector('.visualization-container'));
+        }
         refreshNoteAccess();
         syncControls();
     });

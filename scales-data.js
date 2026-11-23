@@ -163,3 +163,19 @@ function calculateNoteOctaves(scaleNotes, clefType) {
         return octave;
     });
 }
+
+// CAGED fingerings from low E (string 1) to high E (string 6).
+// Each position records the string, fret, and major chord degree.
+const cagedOpenShapes = {
+    C: { root: 0, positions: [[2, 3, 1], [3, 2, 3], [4, 0, 5], [5, 1, 1], [6, 0, 3]] },
+    A: { root: 9, positions: [[2, 0, 1], [3, 2, 5], [4, 2, 1], [5, 2, 3], [6, 0, 5]] },
+    G: { root: 7, positions: [[1, 3, 1], [2, 2, 3], [3, 0, 5], [4, 0, 1], [5, 0, 3], [6, 3, 1]] },
+    E: { root: 4, positions: [[1, 0, 1], [2, 2, 5], [3, 2, 1], [4, 1, 3], [5, 0, 5], [6, 0, 1]] },
+    D: { root: 2, positions: [[3, 0, 1], [4, 2, 5], [5, 3, 1], [6, 2, 3]] },
+};
+
+function calculateCagedPositions(shape, rootIndex) {
+    const openShape = cagedOpenShapes[shape];
+    const fretOffset = (rootIndex - openShape.root + 12) % 12;
+    return openShape.positions.map(([string, fret, degree]) => [string, fret + fretOffset, degree]);
+}

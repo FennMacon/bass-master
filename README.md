@@ -1,5 +1,8 @@
-# bass-master
+# Bass Master 64
 
+Start at `index.html` for the five-lesson path, or go directly to the
+Scale Explorer. Each lesson includes a hands-on bass exercise and links to
+its topics and reference diagrams.
 
 ## Interactive scales page
 
@@ -12,11 +15,13 @@ Open `scales-interactive.html` directly, or serve this directory with
 - `scales-interactive.js`: instrument rendering, controls, note details, and URL state.
 - `vendor/jquery-4.0.0.min.js`: the official jQuery release, including its license header; only this page uses it.
 
-Tap a note or focus it with Tab to read its details. Enter/Space selects it;
-Escape clears the details. Control buttons expose their selected state to assistive technology.
-The existing note lists intentionally exclude E♯, F♭, B♯, and C♭.
+Tap a note to read its details. With a keyboard, Tab into an instrument
+diagram and use the arrow keys to move between notes. Escape clears the
+details. On narrow screens, swipe sideways to see wide diagrams.
+Accidental preferences apply to pitch labels and omit some enharmonic
+spellings, including E♯, F♭, B♯, and C♭.
 
-Selections update the URL without reloading. Bookmark or copy “Link to this view”
+Selections update the URL without reloading. Use “Copy view link” or bookmark the URL
 to retain `root`, `scale`, `spelling`, `instrument`, `chord`, and `shape`.
 Root/chord accidentals use ASCII `#` in URLs (encoded as `%23`); invalid values
 fall back to defaults. Staff views redraw when their container width changes.
@@ -30,4 +35,7 @@ Commit both files together. The historical source map is no longer used.
 The lesson pages use `script.js` without jQuery. Navigation remains available on
 small screens; reference diagrams include written descriptions, expanded states,
 and Escape-to-close. The reference toolbar flows after the content on smaller
-screens and reserves its measured height when fixed on wider screens.
+screens and reserves its measured height when fixed on wider screens. Diagrams
+that need more room can scroll sideways within their panel.
+
+Run `node --test` to verify staff octave calculations and CAGED fingerings.

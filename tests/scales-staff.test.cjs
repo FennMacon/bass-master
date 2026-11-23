@@ -32,3 +32,20 @@ test('bass B major pentatonic crosses into octave 3 on C sharp', () => {
 test('upper octaves remain ascending so renderers can omit out-of-range notes', () => {
     assert.deepEqual(calculate("calculateNoteOctaves(['B', 'C♯', 'B', 'C♯', 'B', 'C♯'], 'treble')"), [3, 4, 4, 5, 5, 6]);
 });
+
+test('CAGED chord shapes stay together and every fret matches its major chord degree', () => {
+    const tuning = [4, 9, 2, 7, 11, 4];
+    const chordIntervals = { 1: 0, 3: 4, 5: 7 };
+    for (const shape of ['C', 'A', 'G', 'E', 'D']) {
+        for (let root = 0; root < 12; root += 1) {
+            const positions = calculate(`calculateCagedPositions('${shape}', ${root})`);
+            const frets = positions.map(([, fret]) => fret);
+            assert.ok(Math.max(...frets) - Math.min(...frets) <= 3, `${shape} shape split across the fretboard`);
+            assert.ok(Math.max(...frets) <= 14, `${shape} shape exceeds the CAGED diagram`);
+            for (const [string, fret, degree] of positions) {
+                assert.equal((tuning[string - 1] + fret) % 12, (root + chordIntervals[degree]) % 12,
+                    `${shape} shape, root ${root}, string ${string}, fret ${fret}, degree ${degree}`);
+            }
+        }
+    }
+});

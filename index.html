@@ -3,108 +3,122 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Bass Master 64</title>
-	<link rel="stylesheet" type="text/css" href="output.css">
-	<link href='https://fonts.googleapis.com/css?family=Covered+By+Your+Grace|Patua+One|Raleway' rel='stylesheet' type='text/css'>
-	<script src="script.js" defer></script>
+    <meta name="description" content="Learn bass guitar and practical music theory in five lessons. Explore notes and scales on a bass, guitar, piano, or staff.">
+    <title>Bass Master 64 | Learn bass guitar and music theory</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="output.css">
+    <script src="script.js" defer></script>
 </head>
-<body class="lesson-page">
-<a class="skip-link" href="#content">Skip to lesson</a>
+<body class="home-page">
+<a class="skip-link" href="#content">Skip to main content</a>
 <div id="wrapper">
-	<header>
-		<a href="index.html"><h1>I want you to play guitar.</h1></a>
-		<p></p>
-	</header>
-	<div class="container">
-			<nav class="lesson-nav" aria-label="Lessons">
-			<h2><a href="./basics.html">Basics</a></h2>
-<ul>
-				<li>Staff, Clefs, Ledgers</li>
-				<li>Note Duration</li>
-				<li>Measures and Time Signatures</li>
-				<li>Rest Duration</li>
-				<li>Dots and Ties</li>
-				<li>Steps and Accidentals</li>
-			</ul>
-			<h2><a href="./scales.html">Scales and Key Signatures</a></h2>
-<ul>
-				<li>The Major Scale</li>
-				<li>The Minor Scale</li>
-				<li>Scale Degrees</li>
-				<li>Key Signatures</li>
-				<li>Key Signature Calculations</li>
-			</ul>
-			<h2><a href="./intervals.html">Intervals</a></h2>
-<ul>
-				<li>Generic Intervals</li>
-				<li>Specific Intervals</li>
-				<li>Writing Intervals</li>
-				<li>Interval Inversion</li>
-			</ul>
-			<h2><a href="./chords.html">Chords</a></h2>
-<ul>
-				<li>Introduction to Chords</li>
-				<li>Triad Inversion</li>
-				<li>Seventh Chords</li>
-				<li>More Seventh Chords</li>
-				<li>Seventh Chord Inversion</li>
-			</ul>
-			<h2><a href="./progressions.html">Chord Progressions</a></h2>
-<ul>
-				<li>Nonharmonic Tones</li>
-				<li>Phrases and Cadences</li>
-				<li>Circle Progressions</li>
-				<li>Common Chord Progressions</li>
-				<li>Triads in First Inversions</li>
-				<li>Triads in Second Inversions</li>
-			</ul>
-		<p><a href="scales-interactive.html">Interactive Scale Explorer</a></p>
-</nav>
-<main id="content" tabindex="-1">
-		<article>
-			<h2>Oh, hello!</h2>
-			<p>
-			I think you want to learn how to play guitar. Well, bass guitar. Let's call it bass. Four strings? Low tones? Choose a lesson on the side or below to get started!
-			</p>
-			<ul>
-				<li><a href="./basics.html">Basics</a></li>
-				<li><a href="./scales.html">Scales and Key Signatures</a></li>
-				<li><a href="./intervals.html">Intervals</a></li>
-				<li><a href="./chords.html">Chords</a></li>
-				<li><a href="./progressions.html">Chord Progressions</a></li>
-				<li><a href="./scales-interactive.html">Interactive Scale Explorer</a> <span style="color: #F38630; font-weight: bold;">New!</span></li>
-			</ul>
-		</article>
-		<article style="margin-bottom: 3rem;">
-			<h2>How it works</h2>
-			<p>
-			Use the lesson navigation to choose a topic. The reference buttons open diagrams with written explanations; press Escape or Hide All to close them. Select the site heading to return home, or my name to visit my portfolio.
-			</p>
-		</article>
-	</main>
-</div>
-    <footer class="reference-toolbar" aria-label="Reference diagrams">
-    <button id="pButton" aria-expanded="false" aria-controls="piano">Piano</button>
-    <figure id="piano" class="reference-panel" hidden aria-labelledby="piano-caption"><img src="svg/piano.svg" alt="Piano reference diagram" loading="lazy"><figcaption id="piano-caption">Piano keyboard with repeating groups of two and three black keys. C is the white key immediately left of each group of two.</figcaption></figure>
-    <button id="pnButton" aria-expanded="false" aria-controls="pianonotes">Piano Notes</button>
-    <figure id="pianonotes" class="reference-panel" hidden aria-labelledby="pianonotes-caption"><img src="svg/pianonotes.svg" alt="Piano Notes reference diagram" loading="lazy"><figcaption id="pianonotes-caption">Piano notes repeat A through G. Black keys represent sharps or flats between neighboring white keys; there is no black key between E and F or B and C.</figcaption></figure>
-    <button id="tcButton" aria-expanded="false" aria-controls="tc">Treble Clef</button>
-    <figure id="tc" class="reference-panel" hidden aria-labelledby="tc-caption"><img src="svg/tc.svg" alt="Treble Clef reference diagram" loading="lazy"><figcaption id="tc-caption">The treble clef marks G on the second staff line from the bottom.</figcaption></figure>
-    <button id="fcButton" aria-expanded="false" aria-controls="full">Treble Notes</button>
-    <figure id="full" class="reference-panel" hidden aria-labelledby="full-caption"><img src="svg/tcnotes.svg" alt="Treble Notes reference diagram" loading="lazy"><figcaption id="full-caption">Treble staff lines from bottom to top are E, G, B, D, F. Spaces are F, A, C, E.</figcaption></figure>
-    <button id="bcButton" aria-expanded="false" aria-controls="bc">Bass Clef</button>
-    <figure id="bc" class="reference-panel" hidden aria-labelledby="bc-caption"><img src="svg/bc.svg" alt="Bass Clef reference diagram" loading="lazy"><figcaption id="bc-caption">The bass clef marks F on the fourth staff line from the bottom, between its two dots.</figcaption></figure>
-    <button id="ndButton" aria-expanded="false" aria-controls="nd">Bass Staff Notes</button>
-    <figure id="nd" class="reference-panel" hidden aria-labelledby="nd-caption"><img src="svg/bcnotes.svg" alt="Bass Staff Notes reference diagram" loading="lazy"><figcaption id="nd-caption">Bass staff lines from bottom to top are G, B, D, F, A. Spaces are A, C, E, G.</figcaption></figure>
-    <button id="bButton" aria-expanded="false" aria-controls="b">Bass</button>
-    <figure id="b" class="reference-panel" hidden aria-labelledby="b-caption"><img src="svg/bass.svg" alt="Bass reference diagram" loading="lazy"><figcaption id="b-caption">A standard four-string bass is tuned E, A, D, G from lowest to highest pitch.</figcaption></figure>
-    <button id="btButton" aria-expanded="false" aria-controls="bt">Tab Numbers</button>
-    <figure id="bt" class="reference-panel" hidden aria-labelledby="bt-caption"><img src="svg/bassnumbers.svg" alt="Tab Numbers reference diagram" loading="lazy"><figcaption id="bt-caption">Bass fret numbers indicate distance from the open string. Zero means open; each fret raises pitch by one semitone.</figcaption></figure>
-    <button id="bnButton" aria-expanded="false" aria-controls="bn">Bass Fretboard Notes</button>
-    <figure id="bn" class="reference-panel" hidden aria-labelledby="bn-caption"><img src="svg/bassnotes.svg" alt="Bass Fretboard Notes reference diagram" loading="lazy"><figcaption id="bn-caption">Each bass fret raises pitch by one semitone. The twelfth fret repeats the open-string note one octave higher.</figcaption></figure>
-    <button id="hideAllButton">Hide All</button>
-    <a class="author-link" href="https://fenn.club">Fenn Macon</a>
-</footer>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a class="brand" href="index.html" aria-current="page"><span class="brand-mark" aria-hidden="true">B<span>64</span></span><span>Bass Master 64</span></a>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="#lessons">Lessons</a>
+                <a href="scales-interactive.html">Scale Explorer</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="content" tabindex="-1">
+        <section class="home-hero" aria-labelledby="home-title">
+            <div class="home-hero-copy">
+                <h1 id="home-title">Learn bass from the ground up.</h1>
+                <p>Start with notes and rhythm, then learn how scales, intervals, and chords work together. Try each idea on your bass as you go.</p>
+                <div class="home-actions">
+                    <a class="action action-primary" href="basics.html">Start with the basics <span aria-hidden="true">→</span></a>
+                    <a class="action action-secondary" href="#lessons">Browse lessons</a>
+                </div>
+            </div>
+            <figure class="home-hero-media">
+                <img src="assets/bass-hero.webp" width="1200" height="800" alt="" fetchpriority="high">
+                <figcaption class="tuning-guide">
+                    <span>Standard bass tuning <small>Low to high</small></span>
+                    <span class="tuning-notes">E A D G</span>
+                </figcaption>
+            </figure>
+        </section>
+
+        <div class="home-learning">
+            <section class="home-lessons" id="lessons" aria-labelledby="lesson-path-title">
+                <h2 id="lesson-path-title">The lesson path</h2>
+                <p>Start at the top or jump to the topic you want to practice.</p>
+                <ol class="lesson-path">
+                    <li><a href="basics.html"><span><strong>Basics</strong><span class="lesson-path-detail">Read notes and count rhythms.</span></span><span class="lesson-path-arrow" aria-hidden="true">→</span></a></li>
+                    <li><a href="scales.html"><span><strong>Scales and Key Signatures</strong><span class="lesson-path-detail">Find the notes that belong to a key.</span></span><span class="lesson-path-arrow" aria-hidden="true">→</span></a></li>
+                    <li><a href="intervals.html"><span><strong>Intervals</strong><span class="lesson-path-detail">Measure the distance between two notes.</span></span><span class="lesson-path-arrow" aria-hidden="true">→</span></a></li>
+                    <li><a href="chords.html"><span><strong>Chords</strong><span class="lesson-path-detail">Build triads and seventh chords from intervals.</span></span><span class="lesson-path-arrow" aria-hidden="true">→</span></a></li>
+                    <li><a href="progressions.html"><span><strong>Chord Progressions</strong><span class="lesson-path-detail">Follow chord changes and choose notes for a bass line.</span></span><span class="lesson-path-arrow" aria-hidden="true">→</span></a></li>
+                </ol>
+            </section>
+
+            <aside class="home-tools" aria-labelledby="practice-tools-title">
+                <h2 id="practice-tools-title">Practice tools</h2>
+                <div class="tool-card tool-card-featured">
+                    <h3>Scale Explorer</h3>
+                    <p>Pick a root and a scale to see where the notes land on a bass, guitar, piano, or staff.</p>
+                    <a href="scales-interactive.html" class="action action-light">Open the Scale Explorer <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="tool-card">
+                    <h3>Reference diagrams</h3>
+                    <p>Look up fretboard notes, piano keys, and treble and bass clefs as you read.</p>
+                    <a href="#reference-diagrams">Jump to reference diagrams</a>
+                </div>
+            </aside>
+        </div>
+    </main>
+    <footer class="reference-toolbar" id="reference-diagrams" tabindex="-1" aria-labelledby="reference-heading">
+        <h2 class="reference-heading" id="reference-heading">Reference diagrams</h2>
+        <button id="pButton" aria-expanded="false" aria-controls="piano">Piano</button>
+        <figure id="piano" class="reference-panel" hidden aria-labelledby="piano-caption">
+            <div class="reference-image"><img src="svg/piano.svg" alt="Piano reference diagram" width="960" height="300" loading="lazy"></div>
+            <figcaption id="piano-caption">Piano keyboard with repeating groups of two and three black keys. C is the white key immediately left of each group of two.</figcaption>
+        </figure>
+        <button id="pnButton" aria-expanded="false" aria-controls="pianonotes">Piano Notes</button>
+        <figure id="pianonotes" class="reference-panel" hidden aria-labelledby="pianonotes-caption">
+            <div class="reference-image"><img src="svg/pianonotes.svg" alt="Piano Notes reference diagram" width="960" height="300" loading="lazy"></div>
+            <figcaption id="pianonotes-caption">Piano notes repeat A through G. Black keys represent sharps or flats between neighboring white keys; there is no black key between E and F or B and C.</figcaption>
+        </figure>
+        <button id="tcButton" aria-expanded="false" aria-controls="tc">Treble Clef</button>
+        <figure id="tc" class="reference-panel" hidden aria-labelledby="tc-caption">
+            <div class="reference-image"><img src="svg/tc.svg" alt="Treble Clef reference diagram" width="960" height="300" loading="lazy"></div>
+            <figcaption id="tc-caption">The treble clef marks G on the second staff line from the bottom.</figcaption>
+        </figure>
+        <button id="fcButton" aria-expanded="false" aria-controls="full">Treble Notes</button>
+        <figure id="full" class="reference-panel" hidden aria-labelledby="full-caption">
+            <div class="reference-image"><img src="svg/tcnotes.svg" alt="Treble Notes reference diagram" width="960" height="300" loading="lazy"></div>
+            <figcaption id="full-caption">Treble staff lines from bottom to top are E, G, B, D, F. Spaces are F, A, C, E.</figcaption>
+        </figure>
+        <button id="bcButton" aria-expanded="false" aria-controls="bc">Bass Clef</button>
+        <figure id="bc" class="reference-panel" hidden aria-labelledby="bc-caption">
+            <div class="reference-image"><img src="svg/bc.svg" alt="Bass Clef reference diagram" width="960" height="300" loading="lazy"></div>
+            <figcaption id="bc-caption">The bass clef marks F on the fourth staff line from the bottom, between its two dots.</figcaption>
+        </figure>
+        <button id="ndButton" aria-expanded="false" aria-controls="nd">Bass Staff Notes</button>
+        <figure id="nd" class="reference-panel" hidden aria-labelledby="nd-caption">
+            <div class="reference-image"><img src="svg/bcnotes.svg" alt="Bass Staff Notes reference diagram" width="960" height="300" loading="lazy"></div>
+            <figcaption id="nd-caption">Bass staff lines from bottom to top are G, B, D, F, A. Spaces are A, C, E, G.</figcaption>
+        </figure>
+        <button id="bButton" aria-expanded="false" aria-controls="b">Bass</button>
+        <figure id="b" class="reference-panel" hidden aria-labelledby="b-caption">
+            <div class="reference-image"><img src="svg/bass.svg" alt="Bass reference diagram" width="960" height="300" loading="lazy"></div>
+            <figcaption id="b-caption">A standard four-string bass is tuned E, A, D, G from lowest to highest pitch.</figcaption>
+        </figure>
+        <button id="btButton" aria-expanded="false" aria-controls="bt">Tab Numbers</button>
+        <figure id="bt" class="reference-panel" hidden aria-labelledby="bt-caption">
+            <div class="reference-image"><img src="svg/bassnumbers.svg" alt="Tab Numbers reference diagram" width="960" height="300" loading="lazy"></div>
+            <figcaption id="bt-caption">Bass fret numbers indicate distance from the open string. Zero means open; each fret raises pitch by one semitone.</figcaption>
+        </figure>
+        <button id="bnButton" aria-expanded="false" aria-controls="bn">Bass Fretboard Notes</button>
+        <figure id="bn" class="reference-panel" hidden aria-labelledby="bn-caption">
+            <div class="reference-image"><img src="svg/bassnotes.svg" alt="Bass Fretboard Notes reference diagram" width="960" height="300" loading="lazy"></div>
+            <figcaption id="bn-caption">Each bass fret raises pitch by one semitone. The twelfth fret repeats the open-string note one octave higher.</figcaption>
+        </figure>
+        <button id="hideAllButton">Hide All</button>
+        <a class="author-link" href="https://fenn.club">Fenn Macon</a>
+    </footer>
 </div>
 </body>
 </html>

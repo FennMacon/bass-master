@@ -3,202 +3,191 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Interactive Scales - Bass Master 64</title>
-    <link rel="stylesheet" type="text/css" href="output.css">
-    <link href='https://fonts.googleapis.com/css?family=Covered+By+Your+Grace|Patua+One|Raleway' rel='stylesheet' type='text/css'>
-    <script src="vendor/jquery-4.0.0.min.js"></script>
+    <title>Scale Explorer | Bass Master 64</title>
+    <meta name="description" content="Explore scales on piano, bass, guitar, and the staff, or compare CAGED chord shapes on a guitar fretboard.">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="output.css">
     <link rel="stylesheet" href="scales-interactive.css">
+    <script src="vendor/jquery-4.0.0.min.js" defer></script>
+    <script src="scales-data.js" defer></script>
+    <script src="scales-interactive.js" defer></script>
 </head>
-<body>
-<a class="skip-link" href="#content">Skip to scale explorer</a>
-<div id="wrapper">
-    <header>
-        <a href="index.html"><h1>Scales and the CAGED system</h1></a>
-        <p></p>
+<body class="explorer-page">
+    <a class="skip-link" href="#content">Skip to scale explorer</a>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a class="brand" href="index.html">
+                <span class="brand-mark" aria-hidden="true">B<span>64</span></span>
+                <span>Bass Master 64</span>
+            </a>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="index.html#lessons">Lessons</a>
+                <a href="scales-interactive.html" aria-current="page">Scale Explorer</a>
+            </nav>
+        </div>
     </header>
 
     <main class="scale-page-container" id="content" tabindex="-1">
+        <div class="explorer-intro">
+            <h1>Scale Explorer</h1>
+            <p>See where a scale falls on the bass, guitar, piano, or staff. Then find the same major chord in different places on the guitar.</p>
+            <nav class="explorer-jump" aria-label="Explorer tools">
+                <a href="#scale-builder">Scale builder</a>
+                <a href="#caged">CAGED chord shapes</a>
+            </nav>
+        </div>
 
+        <noscript>
+            <p>Enable JavaScript to use the diagrams, or read the <a href="scales.html">scales and key signatures lesson</a>.</p>
+        </noscript>
 
-        <div class="visualization-container">
-            <!-- Piano Visualization -->
-            <div class="piano-visual active" id="piano-viz"></div>
-
-            <!-- Bass Visualization -->
-            <div class="bass-visual" id="bass-viz"></div>
-
-            <!-- Guitar Visualization -->
-            <div class="guitar-visual" id="guitar-viz"></div>
-
-            <!-- Treble Clef Visualization -->
-            <div class="treble-visual" id="treble-viz"></div>
-
-            <!-- Bass Clef Visualization -->
-            <div class="bass-clef-visual" id="bass-clef-viz"></div>
-                    </div>
-        <div class="note-details" id="note-details" role="status" aria-live="polite">Select a note to see its details.</div>
-        <div class="controls-container">
-
-            <!-- Visualization in its own row -->
-                    <div class="btn-group visualizations" role="group" aria-label="Instrument">
-                <span class="control-label">Instrument</span>
-                        <button class="viz-btn active" data-viz="piano">Piano</button>
-                        <button class="viz-btn" data-viz="bass">Bass</button>
-                        <button class="viz-btn" data-viz="guitar">Guitar</button>
-                        <button class="viz-btn" data-viz="treble">Treble Clef</button>
-                        <button class="viz-btn" data-viz="bass-clef">Bass Clef</button>
+        <section class="explorer-card" id="scale-builder" aria-labelledby="scale-builder-heading">
+            <div class="explorer-card-heading">
+                <h2 id="scale-builder-heading">Build a scale</h2>
+                <p>Pick a root and a scale type, then choose where to see its notes.</p>
             </div>
-
-            <!-- Root Notes in their own row -->
-                <div class="btn-group root-notes" role="group" aria-label="Root">
-                <span class="control-label">Root</span>
-                <button class="note-btn active" data-note="C" data-sharp="C" data-flat="C" data-label="C">C</button>
-                <button class="note-btn" data-note="C#" data-sharp="C♯" data-flat="D♭" data-label="C♯/D♭">C♯/D♭</button>
-                <button class="note-btn" data-note="D" data-sharp="D" data-flat="D" data-label="D">D</button>
-                <button class="note-btn" data-note="D#" data-sharp="D♯" data-flat="E♭" data-label="D♯/E♭">D♯/E♭</button>
-                <button class="note-btn" data-note="E" data-sharp="E" data-flat="E" data-label="E">E</button>
-                <button class="note-btn" data-note="F" data-sharp="F" data-flat="F" data-label="F">F</button>
-                <button class="note-btn" data-note="F#" data-sharp="F♯" data-flat="G♭" data-label="F♯/G♭">F♯/G♭</button>
-                <button class="note-btn" data-note="G" data-sharp="G" data-flat="G" data-label="G">G</button>
-                <button class="note-btn" data-note="G#" data-sharp="G♯" data-flat="A♭" data-label="G♯/A♭">G♯/A♭</button>
-                <button class="note-btn" data-note="A" data-sharp="A" data-flat="A" data-label="A">A</button>
-                <button class="note-btn" data-note="A#" data-sharp="A♯" data-flat="B♭" data-label="A♯/B♭">A♯/B♭</button>
-                <button class="note-btn" data-note="B" data-sharp="B" data-flat="B" data-label="B">B</button>
+            <div class="controls-container">
+                <div class="btn-group root-notes" role="group" aria-labelledby="root-label">
+                    <span class="control-label" id="root-label">Root note</span>
+                    <button class="note-btn active" data-note="C" data-sharp="C" data-flat="C" data-label="C">C</button>
+                    <button class="note-btn" data-note="C#" data-sharp="C♯" data-flat="D♭" data-label="C♯/D♭">C♯/D♭</button>
+                    <button class="note-btn" data-note="D" data-sharp="D" data-flat="D" data-label="D">D</button>
+                    <button class="note-btn" data-note="D#" data-sharp="D♯" data-flat="E♭" data-label="D♯/E♭">D♯/E♭</button>
+                    <button class="note-btn" data-note="E" data-sharp="E" data-flat="E" data-label="E">E</button>
+                    <button class="note-btn" data-note="F" data-sharp="F" data-flat="F" data-label="F">F</button>
+                    <button class="note-btn" data-note="F#" data-sharp="F♯" data-flat="G♭" data-label="F♯/G♭">F♯/G♭</button>
+                    <button class="note-btn" data-note="G" data-sharp="G" data-flat="G" data-label="G">G</button>
+                    <button class="note-btn" data-note="G#" data-sharp="G♯" data-flat="A♭" data-label="G♯/A♭">G♯/A♭</button>
+                    <button class="note-btn" data-note="A" data-sharp="A" data-flat="A" data-label="A">A</button>
+                    <button class="note-btn" data-note="A#" data-sharp="A♯" data-flat="B♭" data-label="A♯/B♭">A♯/B♭</button>
+                    <button class="note-btn" data-note="B" data-sharp="B" data-flat="B" data-label="B">B</button>
                 </div>
-                            <!-- Scale Types in their own row -->
-            <div class="btn-group scale-types" role="group" aria-label="Scale">
-                <span class="control-label">Scale</span>
-                <button class="scale-btn active" data-scale="major">Major</button>
-                <button class="scale-btn" data-scale="minor">Natural Minor</button>
-                <button class="scale-btn" data-scale="harmonic-minor">Harmonic Minor</button>
-                <button class="scale-btn" data-scale="pentatonic">Major pentatonic</button>
-            </div>
-            <!-- Accidentals in their own row -->
-            <div class="accidentals-container" role="group" aria-label="Note spelling">
-                <span class="control-label">Note spelling</span>
+                <div class="btn-group scale-types" role="group" aria-labelledby="scale-label">
+                    <span class="control-label" id="scale-label">Scale type</span>
+                    <button class="scale-btn active" data-scale="major">Major</button>
+                    <button class="scale-btn" data-scale="minor">Natural Minor</button>
+                    <button class="scale-btn" data-scale="harmonic-minor">Harmonic Minor</button>
+                    <button class="scale-btn" data-scale="pentatonic">Major Pentatonic</button>
+                </div>
+                <div class="btn-group visualizations" role="group" aria-labelledby="instrument-label">
+                    <span class="control-label" id="instrument-label">Show on</span>
+                    <button class="viz-btn active" data-viz="piano">Piano</button>
+                    <button class="viz-btn" data-viz="bass">Bass</button>
+                    <button class="viz-btn" data-viz="guitar">Guitar</button>
+                    <button class="viz-btn" data-viz="treble">Treble Clef</button>
+                    <button class="viz-btn" data-viz="bass-clef">Bass Clef</button>
+                </div>
+                <div class="accidentals-container" role="group" aria-labelledby="spelling-label">
+                    <span class="control-label" id="spelling-label">Accidentals</span>
                     <button class="accidental-btn" data-accidental="flat">Prefer flats</button>
                     <button class="accidental-btn active" data-accidental="natural">Auto</button>
                     <button class="accidental-btn" data-accidental="sharp">Prefer sharps</button>
-        </div>
-
-        <!-- Move the color legend here, below the visualization -->
-        <div class="color-legend">
-            <!-- Note display at the bottom of controls container -->
-        <div class="note-display" id="scale-notes">
-            C Major Scale: C - D - E - F - G - A - B - C
-        </div>
-            <p>Hover, tap, or focus a note to see more information. Notes are color-coded consistently across all visualizations:</p>
-            <div class="color-chips" id="standard-color-chips">
-                <div class="color-chip" data-degree="0"><span class="color-sample" style="background-color: rgba(255, 0, 0, 0.7);"></span> C <span class="solfege">(Do)</span></div>
-                <div class="color-chip" data-degree="1"><span class="color-sample" style="background-color: rgba(255, 165, 0, 0.7);"></span> D <span class="solfege">(Re)</span></div>
-                <div class="color-chip" data-degree="2"><span class="color-sample" style="background-color: rgba(255, 255, 0, 0.7);"></span> E <span class="solfege">(Mi)</span></div>
-                <div class="color-chip" data-degree="3"><span class="color-sample" style="background-color: rgba(0, 128, 0, 0.7);"></span> F <span class="solfege">(Fa)</span></div>
-                <div class="color-chip" data-degree="4"><span class="color-sample" style="background-color: rgba(0, 0, 255, 0.7);"></span> G <span class="solfege">(Sol)</span></div>
-                <div class="color-chip" data-degree="5"><span class="color-sample" style="background-color: rgba(75, 0, 130, 0.7);"></span> A <span class="solfege">(La)</span></div>
-                <div class="color-chip" data-degree="6"><span class="color-sample" style="background-color: rgba(143, 0, 255, 0.7);"></span> B <span class="solfege">(Ti)</span></div>
-        </div>
-
-            <!-- Pentatonic-specific color chips (initially hidden) -->
-            <div class="color-chips" id="pentatonic-color-chips" style="display: none;">
-                <div class="color-chip" data-degree="0"><span class="color-sample" style="background-color: rgba(255, 0, 0, 0.7);"></span> C <span class="solfege">(Do)</span></div>
-                <div class="color-chip" data-degree="1"><span class="color-sample" style="background-color: rgba(255, 165, 0, 0.7);"></span> D <span class="solfege">(Re)</span></div>
-                <div class="color-chip" data-degree="2"><span class="color-sample" style="background-color: rgba(255, 255, 0, 0.7);"></span> E <span class="solfege">(Mi)</span></div>
-                <div class="color-chip" data-degree="3"><span class="color-sample" style="background-color: rgba(0, 0, 255, 0.7);"></span> G <span class="solfege">(Sol)</span></div>
-                <div class="color-chip" data-degree="4"><span class="color-sample" style="background-color: rgba(75, 0, 130, 0.7);"></span> A <span class="solfege">(La)</span></div>
+                    <p class="spelling-hint">Auto uses the key’s usual preference. The diagram labels use common sharp or flat names.</p>
+                </div>
             </div>
 
-            <p><strong>Notes with white borders</strong> indicate the root note of the scale.</p>
-        </div>
-        </div>
+            <div class="note-display" id="scale-notes" role="status">
+                <h3 id="scale-name">C major scale</h3>
+                <p id="scale-note-list">C · D · E · F · G · A · B · C</p>
+                <p class="scale-pattern" id="scale-step-pattern">Step pattern: W · W · H · W · W · W · H</p>
+            </div>
+            <p class="diagram-hint" id="scale-diagram-help">Tap a note for details, or Tab into the diagram and use the arrow keys.<span class="swipe-hint"> Swipe to see the full diagram.</span></p>
+            <div class="visualization-container">
+                <div class="piano-visual active" id="piano-viz" role="toolbar" aria-label="Piano keyboard" aria-describedby="scale-diagram-help"></div>
+                <div class="bass-visual" id="bass-viz" role="toolbar" aria-label="Bass fretboard" aria-describedby="scale-diagram-help"></div>
+                <div class="guitar-visual" id="guitar-viz" role="toolbar" aria-label="Guitar fretboard" aria-describedby="scale-diagram-help"></div>
+                <div class="treble-visual" id="treble-viz" role="toolbar" aria-label="Treble staff" aria-describedby="scale-diagram-help"></div>
+                <div class="bass-clef-visual" id="bass-clef-viz" role="toolbar" aria-label="Bass staff" aria-describedby="scale-diagram-help"></div>
+            </div>
+            <div class="note-details" id="note-details" role="status">Select a note to see its details.</div>
 
-        <a class="selection-link" id="selection-link" href="scales-interactive.html">Link to this view</a>
+            <div class="color-legend">
+                <h3>Scale degrees</h3>
+                <div class="color-chips" id="standard-color-chips">
+                    <div class="color-chip" data-degree="0"><span class="color-sample" style="background-color: rgba(255, 0, 0, 0.7);"></span> C <span class="solfege">(Do)</span></div>
+                    <div class="color-chip" data-degree="1"><span class="color-sample" style="background-color: rgba(255, 165, 0, 0.7);"></span> D <span class="solfege">(Re)</span></div>
+                    <div class="color-chip" data-degree="2"><span class="color-sample" style="background-color: rgba(255, 255, 0, 0.7);"></span> E <span class="solfege">(Mi)</span></div>
+                    <div class="color-chip" data-degree="3"><span class="color-sample" style="background-color: rgba(0, 128, 0, 0.7);"></span> F <span class="solfege">(Fa)</span></div>
+                    <div class="color-chip" data-degree="4"><span class="color-sample" style="background-color: rgba(0, 0, 255, 0.7);"></span> G <span class="solfege">(Sol)</span></div>
+                    <div class="color-chip" data-degree="5"><span class="color-sample" style="background-color: rgba(75, 0, 130, 0.7);"></span> A <span class="solfege">(La)</span></div>
+                    <div class="color-chip" data-degree="6"><span class="color-sample" style="background-color: rgba(143, 0, 255, 0.7);"></span> B <span class="solfege">(Ti)</span></div>
+                </div>
+                <div class="color-chips" id="pentatonic-color-chips" style="display: none;">
+                    <div class="color-chip" data-degree="0"><span class="color-sample" style="background-color: rgba(255, 0, 0, 0.7);"></span> C <span class="solfege">(Do)</span></div>
+                    <div class="color-chip" data-degree="1"><span class="color-sample" style="background-color: rgba(255, 165, 0, 0.7);"></span> D <span class="solfege">(Re)</span></div>
+                    <div class="color-chip" data-degree="2"><span class="color-sample" style="background-color: rgba(255, 255, 0, 0.7);"></span> E <span class="solfege">(Mi)</span></div>
+                    <div class="color-chip" data-degree="3"><span class="color-sample" style="background-color: rgba(0, 0, 255, 0.7);"></span> G <span class="solfege">(Sol)</span></div>
+                    <div class="color-chip" data-degree="4"><span class="color-sample" style="background-color: rgba(75, 0, 130, 0.7);"></span> A <span class="solfege">(La)</span></div>
+                </div>
+                <p>The white outline marks the root. In the step pattern, W is a whole step (two frets), H is a half step (one fret), and W+H is three frets.</p>
+            </div>
+        </section>
 
-        <!-- Add the CAGED System container after the color legend -->
-        <div class="caged-container">
-            <div class="caged-title">CAGED System</div>
-
-            <div class="caged-controls guitar-caged-controls">
-                <div class="caged-chord-select">
-                    <span>Root Note:</span>
+        <section class="explorer-card caged-container" id="caged" aria-labelledby="caged-heading">
+            <div class="explorer-card-heading">
+                <h2 id="caged-heading">CAGED chord shapes</h2>
+                <p>On guitar, the open C, A, G, E, and D chord shapes can move up the neck. Pick a major chord and compare where each shape puts its root, third, and fifth.</p>
+            </div>
+            <div class="caged-controls">
+                <div class="caged-chord-select" role="group" aria-labelledby="chord-root-label">
+                    <span class="control-label" id="chord-root-label">Chord root</span>
                     <button class="caged-btn active" data-root="C">C</button>
-                    <button class="caged-btn" data-root="C#">C#/D♭</button>
+                    <button class="caged-btn" data-root="C#">C♯/D♭</button>
                     <button class="caged-btn" data-root="D">D</button>
-                    <button class="caged-btn" data-root="D#">D#/E♭</button>
+                    <button class="caged-btn" data-root="D#">D♯/E♭</button>
                     <button class="caged-btn" data-root="E">E</button>
                     <button class="caged-btn" data-root="F">F</button>
-                    <button class="caged-btn" data-root="F#">F#/G♭</button>
+                    <button class="caged-btn" data-root="F#">F♯/G♭</button>
                     <button class="caged-btn" data-root="G">G</button>
-                    <button class="caged-btn" data-root="G#">G#/A♭</button>
+                    <button class="caged-btn" data-root="G#">G♯/A♭</button>
                     <button class="caged-btn" data-root="A">A</button>
-                    <button class="caged-btn" data-root="A#">A#/B♭</button>
+                    <button class="caged-btn" data-root="A#">A♯/B♭</button>
                     <button class="caged-btn" data-root="B">B</button>
                 </div>
-
-                <div class="caged-shape-select">
-                    <span>Shape:</span>
+                <div class="caged-shape-select" role="group" aria-labelledby="shape-label">
+                    <span class="control-label" id="shape-label">Shape</span>
                     <button class="caged-btn active" data-shape="C">C</button>
                     <button class="caged-btn" data-shape="A">A</button>
                     <button class="caged-btn" data-shape="G">G</button>
                     <button class="caged-btn" data-shape="E">E</button>
                     <button class="caged-btn" data-shape="D">D</button>
-                    <button class="caged-btn" data-shape="all">All</button>
+                    <button class="caged-btn" data-shape="all">All shapes</button>
                 </div>
-        </div>
-
-            <div class="caged-controls" style="display: none;">
-                <div class="caged-chord-select">
-                    <span>Root Note:</span>
-                    <button class="caged-btn active" data-root="C">C</button>
-                    <button class="caged-btn" data-root="C#">C#/D♭</button>
-                    <button class="caged-btn" data-root="D">D</button>
-                    <button class="caged-btn" data-root="D#">D#/E♭</button>
-                    <button class="caged-btn" data-root="E">E</button>
-                    <button class="caged-btn" data-root="F">F</button>
-                    <button class="caged-btn" data-root="F#">F#/G♭</button>
-                    <button class="caged-btn" data-root="G">G</button>
-                    <button class="caged-btn" data-root="G#">G#/A♭</button>
-                    <button class="caged-btn" data-root="A">A</button>
-                    <button class="caged-btn" data-root="A#">A#/B♭</button>
-                    <button class="caged-btn" data-root="B">B</button>
             </div>
-
-            </div>
-
+            <h3 class="chord-result" id="chord-result" aria-live="polite">C major · C shape</h3>
+            <p class="diagram-hint" id="caged-diagram-help">Tap a note for its string and fret, or Tab into the fretboard and use the arrow keys.<span class="swipe-hint"> Swipe to see the full fretboard.</span></p>
             <div class="caged-visualization">
-                <div class="caged-fretboard" id="caged-fretboard"></div>
+                <div class="caged-fretboard" id="caged-fretboard" role="toolbar" aria-label="CAGED guitar fretboard" aria-describedby="caged-diagram-help"></div>
             </div>
+            <div class="note-details" id="caged-note-details" role="status">Select a chord note to see its details.</div>
+            <ul class="caged-legend" aria-label="Chord degrees" role="list">
+                <li><span class="caged-legend-color root" aria-hidden="true">R</span> Root</li>
+                <li><span class="caged-legend-color third" aria-hidden="true">3</span> Major third</li>
+                <li><span class="caged-legend-color fifth" aria-hidden="true">5</span> Perfect fifth</li>
+            </ul>
+        </section>
 
-            <div class="note-details" id="caged-note-details" role="status" aria-live="polite">Select a chord note to see its details.</div>
-            <div class="caged-legend">
-                <div class="caged-legend-title">Legend:</div>
-                <div class="caged-legend-item guitar-caged-legend">
-                    <span class="caged-legend-color root" style="background-color: #ff5252;">R</span>
-                    <span>Root Note</span>
-                </div>
-                <div class="caged-legend-item guitar-caged-legend">
-                    <span class="caged-legend-color" style="background-color: #2196f3;">3</span>
-                    <span>3rd</span>
-                </div>
-                <div class="caged-legend-item guitar-caged-legend">
-                    <span class="caged-legend-color" style="background-color: #4caf50;">5</span>
-                    <span>5th</span>
-                </div>
-            </div>
+        <div class="explorer-share">
+            <button class="copy-view" id="copy-view" type="button" hidden>Copy view link</button>
+            <a class="selection-link" id="selection-link" href="scales-interactive.html">Link to this view</a>
+            <span id="copy-status" role="status"></span>
+            <label class="share-fallback" id="share-fallback" hidden>
+                Copy this address
+                <input id="share-address" type="url" readonly>
+            </label>
         </div>
     </main>
 
-    <footer>
-        <a href="index.html">Home</a>
-        <a href="basics.html">Basics</a>
-        <a href="scales.html">Scales & Keys</a>
-        <a href="intervals.html">Intervals</a>
-        <a href="chords.html">Chords</a>
-        <a href="progressions.html">Progressions</a>
+    <footer class="explorer-footer">
+        <nav aria-label="Lessons">
+            <a href="index.html">Home</a>
+            <a href="basics.html">Basics</a>
+            <a href="scales.html">Scales &amp; Key Signatures</a>
+            <a href="intervals.html">Intervals</a>
+            <a href="chords.html">Chords</a>
+            <a href="progressions.html">Chord Progressions</a>
+        </nav>
         <a href="https://fenn.club">Fenn Macon</a>
     </footer>
-</div>
-
-<script src="scales-data.js"></script>
-<script src="scales-interactive.js"></script>
 </body>
 </html>
